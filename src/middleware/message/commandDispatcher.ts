@@ -1,5 +1,6 @@
 import { User } from "discord.js";
 import { ICommandCtx, TCommandMid, TMessageMid } from "./";
+import { Util } from "../../lib";
 
 const PREFIX = "!";
 
@@ -44,7 +45,13 @@ const commandDispatcher: TMessageMid = async (msg, ctx, next) => {
   if (!command) {
     ctx.didYouMean = cmd;
     return next()
-  };
+  }
+
+  const incommingData = Util.formatObj({
+    name: command.name,
+    arguments: (args.length ? args : ["none"]).join(", "),
+  });
+  ctx.debug(`Running command.${incommingData}`);
 
   // Build the arguments by matching them with the command info.
   let builtArgs: TCmdArgs = args;

@@ -11,18 +11,18 @@ class Stopwatch {
     return this.toFixTime(toFixed, chosenLap);
   }
 
-  private toFixTime(toFixedAmnt: number | undefined, time: number): number {
-    return parseFloat(time.toFixed(toFixedAmnt));
+  private toFixTime(toFixedAmnt: number | undefined, time: number): string {
+    return time.toFixed(toFixedAmnt);
   }
 
-  public lap(toFixed?: number): number {
+  public lap(toFixed?: number): string {
     if (this.stopped) throw new Error("Stopwatch has already been stopped.");
     const lapTime = performance.now() - this.start;
     this.laps.push(lapTime);
     return this.toFixTime(toFixed, lapTime);
   }
 
-  public stop(toFixed?: number): number {
+  public stop(toFixed?: number): string {
     const finishTime = this.lap(toFixed);
     this.stopped = true;
     return finishTime;

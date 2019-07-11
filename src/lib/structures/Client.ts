@@ -73,7 +73,7 @@ class DeXClient extends Client {
 
     // Timers.
     const totalTime = bootTimer.stop();
-    const loginTime = totalTime - bootstrapTime;
+    const loginTime = parseFloat(totalTime) - parseFloat(bootstrapTime);
     debug(`Successfuly logged in with a total boot time of ${totalTime}ms and login time of ${loginTime}ms.`);
     return loginResp;
   }

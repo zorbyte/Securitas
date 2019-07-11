@@ -1,4 +1,4 @@
-import { Message } from "discord.js";
+import { Message, User } from "discord.js";
 import { Debugger } from "debug";
 import { TMiddleware as TMiddlewareGeneric, IMiddlewareCtx } from "../../lib/structures/Stack";
 import commandDispatcher, { TCmdArgs, ICommand } from "./commandDispatcher";
@@ -15,6 +15,7 @@ export interface IMessageCtx extends IMiddlewareCtx {
 
 export interface ICommandCtx extends IMessageCtx {
   args: TCmdArgs;
+  author: User;
 }
 
 export type TMessageMid = TMiddlewareGeneric<Message, IMessageCtx>;

@@ -12,12 +12,12 @@ type TLoadFunc<T> = (item: T, path: string, scanPath: string, debug: Debugger) =
 class Util {
   public static formatObj(obj: Record<string, string | number>): string {
     let builtString = "\n";
-    for (const [key, value] of Object.entries(obj)) builtString += `\t\t${key}=${chalk.green(inspect(value))}\n`;
+    for (const [key, value] of Object.entries(obj)) builtString += `\t${key}=${chalk.green(inspect(value))}\n`;
     return builtString.trimEnd();
   }
 
   public static truncateStr(str: string, maxLength = 12): string {
-    return str.replace(new RegExp(`/(.{${maxLength - 1}})..+/`), "$1...");
+    return str.replace(new RegExp(`(.{${maxLength - 1}})..+`), "$1...");
   }
 
   public static logError(error: Error & any): void {
