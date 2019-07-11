@@ -1,0 +1,44 @@
+{
+  "name": "dex-bot",
+  "version": "0.0.2",
+  "description": "A Discord bot that does something?",
+  "main": "./dist/index.js",
+  "scripts": {
+    "start": "tsc && cross-env DEBUG=DeX:* NODE_NO_WARNINGS=1 node ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zorbyte/DeX.git"
+  },
+  "author": "zorbyte",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zorbyte/DeX/issues"
+  },
+  "homepage": "https://github.com/zorbyte/DeX#readme",
+  "dependencies": {
+    "@discordjs/uws": "^11.149.1",
+    "chalk": "^2.4.2",
+    "clean-stack": "^2.1.0",
+    "debug": "^4.1.1",
+    "didyoumean2": "^3.1.1",
+    "discord.js": "discordjs/discord.js",
+    "dotenv": "^8.0.0",
+    "erlpack": "github:discordapp/erlpack",
+    "fs-nextra": "^0.4.5",
+    "koa-compose": "^4.1.0",
+    "microframework-w3tec": "^0.6.3",
+    "ow": "^0.13.2",
+    "zlib-sync": "^0.1.4",
+    "zucc": "^0.1.2"
+  },
+  "devDependencies": {
+    "@types/chalk": "^2.2.0",
+    "@types/debug": "^4.1.4",
+    "@types/dotenv": "^6.1.1",
+    "@types/koa-compose": "^3.2.4",
+    "@types/node": "^12.6.1",
+    "cross-env": "^5.2.0",
+    "typescript": "^3.5.3"
+  }
+}
