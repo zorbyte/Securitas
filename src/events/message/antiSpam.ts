@@ -18,11 +18,11 @@ const antiSpam: TCommandMid = async (ctx, next) => {
       fastMsgAmnt: 0,
       content: `NOT_SPAM_${msg.content}`,
       channelID: "NOT_SPAM",
-    }
+    };
   }
 
   const threshold = config.spamThreshold;
-  let isSpamMsg = (msg.createdTimestamp - lastMsg.msgTime <= 2000) && lastMsg.channelID === msg.channel.id;
+  const isSpamMsg = (msg.createdTimestamp - lastMsg.msgTime <= 2000) && lastMsg.channelID === msg.channel.id;
   let fastMsgAmnt = isSpamMsg ? lastMsg.fastMsgAmnt + 1 : 0;
   const isSpam = fastMsgAmnt >= threshold;
   if (isSpam) fastMsgAmnt = 0;
