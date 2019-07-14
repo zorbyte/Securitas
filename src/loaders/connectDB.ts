@@ -1,7 +1,17 @@
-import { MicroframeworkLoader } from "microframework-w3tec";
+//import { MicroframeworkSettings } from "microframework-w3tec";
+import { FuseDB, MongoAdapter } from "fusedb";
 
-const loadDB: MicroframeworkLoader = () => {
-  
-}
+import { createLogger } from "../lib";
+
+const log = createLogger("loader:database");
+function loadDB(): void {
+  log("Configuring MongoDB Driver...");
+  FuseDB.setup({
+    adapter: MongoAdapter({
+        url : "mongodb://localhost:27017/securitas",
+        dbName : "securitas",
+    }),
+  });
+};
 
 export default loadDB;

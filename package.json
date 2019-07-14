@@ -4,7 +4,7 @@
   "description": "A security Discord bot",
   "main": "./dist/src/index.js",
   "scripts": {
-    "start": "tsc && cross-env NODE_NO_WARNINGS=1 node ."
+    "start": "tsc && node ."
   },
   "repository": {
     "type": "git",
@@ -31,6 +31,7 @@
     "keyv": "^3.1.0",
     "koa-compose": "^4.1.0",
     "microframework-w3tec": "^0.6.3",
+    "mongodb": "^3.2.7",
     "nanoid": "^2.0.3",
     "ow": "^0.13.2",
     "zucc": "^0.1.2"
