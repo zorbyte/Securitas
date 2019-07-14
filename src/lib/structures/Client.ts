@@ -1,34 +1,37 @@
-import { Client, Message } from "discord.js";
+import { Client, ClientUser } from "discord.js";
 import {
   bootstrapMicroframework,
   MicroframeworkLoader,
   MicroframeworkSettings,
   Microframework,
 } from "microframework-w3tec";
-import createDebug from "debug";
 import ow from "ow";
 
 import loaders from "../../loaders";
-import { Stack, Stopwatch, Util } from "..";
+import Stack from "./Stack";
+import { Stopwatch, createLogger } from "../utils";
 import {
   TMessageMid,
   IMessageCtx,
   ICommandCtx,
   TCommandMid,
+  IMessage,
 } from "../../middleware/message";
 import { IRegisteredCommand } from "../../loaders/loadCommands";
 
-const debug = createDebug("DeX:client");
+const log = createLogger("client");
 
 class DeXClient extends Client {
   public commands!: Record<string, IRegisteredCommand | string>;
-  public messageStack = new Stack<Message, IMessageCtx & ICommandCtx>();
+  public messageStack = new Stack<IMessage, IMessageCtx & ICommandCtx>();
 
   private micro!: Microframework;
 
+  public user!: ClientUser;
+
   private async bootstrap(): Promise<Stopwatch | undefined> {
     try {
-      debug("Starting bootstrapping process.");
+      log("Starting bootstrapping process.");
       const bootTimer = new Stopwatch();
       this.micro = await bootstrapMicroframework([
         async (settings: MicroframeworkSettings) => {
@@ -45,8 +48,7 @@ class DeXClient extends Client {
       this.commands = this.micro.settings.getData("commands") || {};
       return bootTimer;
     } catch (err) {
-      debug("An error occurred while bootstrapping.");
-      Util.logError(err);
+      log.error("An error occurred while bootstrapping.", err);
     }
   }
 
@@ -64,17 +66,17 @@ class DeXClient extends Client {
     // If there is no timer that means there is an error.
     if (!bootTimer) return process.exit(1);
     const bootstrapTime = bootTimer.get(0);
-    debug(`Bootstrap completed in ${bootstrapTime}ms.`);
+    log(`Bootstrap completed in ${bootstrapTime}ms.`);
 
     // Login.
     const tokenPartial = token ? token.substr(0, 13) : "";
-    debug(`Logging in with ${token ? `token ${tokenPartial}${"*".repeat(token.length - ~~(tokenPartial.length * 2.75))}` : "an unknown token"}.`);
+    log(`Logging in with ${token ? `token ${tokenPartial}${"*".repeat(token.length - ~~(tokenPartial.length * 2.75))}` : "an unknown token"}.`);
     const loginResp = await super.login(token);
 
     // Timers.
     const totalTime = bootTimer.stop();
     const loginTime = parseFloat(totalTime) - parseFloat(bootstrapTime);
-    debug(`Successfuly logged in with a total boot time of ${totalTime}ms and login time of ${loginTime}ms.`);
+    log(`Successfuly logged in with a total boot time of ${totalTime}ms and login time of ${loginTime}ms.`);
     return loginResp;
   }
 

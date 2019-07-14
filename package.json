@@ -1,10 +1,10 @@
 {
   "name": "dex-bot",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A Discord bot that does something?",
-  "main": "./dist/index.js",
+  "main": "./dist/src/index.js",
   "scripts": {
-    "start": "tsc && cross-env DEBUG=DeX:* NODE_NO_WARNINGS=1 node ."
+    "start": "tsc && cross-env NODE_NO_WARNINGS=1 node ."
   },
   "repository": {
     "type": "git",
@@ -18,6 +18,8 @@
   "homepage": "https://github.com/zorbyte/DeX#readme",
   "dependencies": {
     "@discordjs/uws": "^11.149.1",
+    "canvas": "^2.5.0",
+    "captchagen": "^1.2.0",
     "chalk": "^2.4.2",
     "clean-stack": "^2.1.0",
     "debug": "^4.1.1",

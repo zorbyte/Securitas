@@ -7,6 +7,6 @@ const didYouMean: TCommandMid = (msg, ctx, next) => {
   if (!potetialCmd) return next();
   if (Array.isArray(potetialCmd)) potetialCmd = potetialCmd.join(", ");
   msg.channel.send(`Did you mean **${potetialCmd}** :question:`);
-}
+};
 
 export default didYouMean;

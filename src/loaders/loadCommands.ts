@@ -1,8 +1,8 @@
 import { MicroframeworkSettings } from "microframework-w3tec";
-import { Util } from "../lib";
 import { relative, sep } from "path";
 
 import { ICommand } from "../middleware/message/commandDispatcher";
+import { Util } from "../lib";
 
 export interface IRegisteredCommand extends ICommand {
   category: string;

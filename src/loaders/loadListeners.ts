@@ -5,12 +5,12 @@ import { Client, Util } from "../lib";
 export type TListener = (client: Client) => Client;
 
 const loadListeners = (settings: MicroframeworkSettings): Promise<void[]> =>
-  Util.scanDir<TListener>("listeners", (listener, path, scanPath, debug) => {
+  Util.scanDir<TListener>("listeners", (listener, path, scanPath, log) => {
     const listenerName = path.slice(scanPath.length + 1, -3);
 
     // Ignore malformed listeners.
     if (typeof listener !== "function") {
-      debug(`Listener ${listenerName} is malformed... ignoring!`)
+      log(`Listener ${listenerName} is malformed... ignoring!`)
       return;
     };
 

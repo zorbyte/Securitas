@@ -36,6 +36,9 @@
     "node_modules"
   ],
   "include": [
+    "configs/**/*",
     "src/**/*",
+    "src2/**/*",
+    "src/@types/**/*"
   ]
 }

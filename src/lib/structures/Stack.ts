@@ -1,11 +1,10 @@
-import DeXClient from "./Client";
 import compose = require("koa-compose");
-import Stopwatch from "../utils/Stopwatch";
+import { Stopwatch, Client } from "..";
 
 export type TNextFn = () => Promise<any>;
 export type TMiddleware<T, C > = (data: T, ctx: C, next: TNextFn) => any;
 export interface IMiddlewareCtx {
-  client: DeXClient;
+  client: Client;
   timer: Stopwatch;
   [key: string]: any;
 }

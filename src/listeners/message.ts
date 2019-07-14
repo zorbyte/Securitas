@@ -1,22 +1,21 @@
-import createDebug from "debug";
-import { User } from "discord.js";
-
 import { TListener } from "../loaders/loadListeners";
-import { Stopwatch, Util } from "../lib";
+import { IMessage } from "../middleware/message";
+import { Stopwatch, createLogger } from "../lib";
+import config = require("../../configs/config.json");
 
-const debug = createDebug("DeX:events:message");
+const log = createLogger("events:message");
 
-const readyListener: TListener = client => client.on("message", msg => {
+const readyListener: TListener = client => client.on("message", (msg: IMessage) => {
     setImmediate(async () => {
       try {
         const timer = new Stopwatch();
 
         await client.messageStack.handler({
           data: msg,
-          ctx: { client, timer, debug, author: msg.author as User },
+          ctx: { client, timer, config, log: log.child(msg.id) },
         });
       } catch (err) {
-        Util.logError(err);
+        log.error(err);
       }
     });
 });

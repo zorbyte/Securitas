@@ -1,8 +1,5 @@
-import { User } from "discord.js";
 import { ICommandCtx, TCommandMid, TMessageMid } from "./";
 import { Util } from "../../lib";
-
-const PREFIX = "!";
 
 export interface ICommandArgument {
   name: string;
@@ -22,10 +19,10 @@ export interface ICommand {
 
 const commandDispatcher: TMessageMid = async (msg, ctx, next) => {
   // Only reply to valid messages.
-  if (!msg.content.startsWith(PREFIX) || (msg.author as User).bot) return next();
+  if (!msg.content.startsWith(ctx.config.prefix) || msg.author.bot) return next();
 
   // Seperate the content.
-  let [cmd, ...args] = msg.content.slice(PREFIX.length)
+  let [cmd, ...args] = msg.content.slice(ctx.config.prefix.length)
     .trim()
     .split(/ +/g);
   cmd = cmd.toLowerCase();
@@ -47,12 +44,6 @@ const commandDispatcher: TMessageMid = async (msg, ctx, next) => {
     return next()
   }
 
-  const incommingData = Util.formatObj({
-    name: command.name,
-    arguments: (args.length ? args : ["none"]).join(", "),
-  });
-  ctx.debug(`Running command.${incommingData}`);
-
   // Build the arguments by matching them with the command info.
   let builtArgs: TCmdArgs = args;
   if (command.args && args.length) {
@@ -67,7 +58,15 @@ const commandDispatcher: TMessageMid = async (msg, ctx, next) => {
   ctx.args = builtArgs;
 
   // Run the command.
-  await command.run(msg, ctx as ICommandCtx, next);
-}
+  const incommingData = Util.formatObj({
+    name: command.name,
+    arguments: (args.length ? args : ["none"]).join(", "),
+    parseMatchTime: `${ctx.timer.lap(2)}ms`,
+  });
+  ctx.log(`Running command.${incommingData}`);
+  const cmdRan = command.run(msg, ctx as ICommandCtx, next);
+  if (typeof cmdRan.then === 'function') await cmdRan;
+  ctx.log(`Successfully ran command ${command.name} in ${ctx.timer.stop(2)}ms.`);
+};
 
 export default commandDispatcher;

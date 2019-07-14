@@ -1,5 +1,7 @@
 import { performance } from "perf_hooks";
 
+const kInspect = Symbol.for("nodejs.util.inspect.custom");
+
 class Stopwatch {
   private start = performance.now();
   private stopped = false;
@@ -15,18 +17,20 @@ class Stopwatch {
     return time.toFixed(toFixedAmnt);
   }
 
-  public lap(toFixed?: number): string {
+  public lap(toFixedAmnt?: number): string {
     if (this.stopped) throw new Error("Stopwatch has already been stopped.");
     const lapTime = performance.now() - this.start;
     this.laps.push(lapTime);
-    return this.toFixTime(toFixed, lapTime);
+    return this.toFixTime(toFixedAmnt, lapTime);
   }
 
-  public stop(toFixed?: number): string {
-    const finishTime = this.lap(toFixed);
+  public stop(toFixedAmnt?: number): string {
+    const finishTime = this.lap(toFixedAmnt);
     this.stopped = true;
     return finishTime;
   }
+
+  public [kInspect]() {}
 }
 
 export default Stopwatch;

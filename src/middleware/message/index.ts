@@ -1,13 +1,19 @@
 import { Message, User } from "discord.js";
-import { Debugger } from "debug";
-import { TMiddleware as TMiddlewareGeneric, IMiddlewareCtx } from "../../lib/structures/Stack";
+
+import { TMiddleware as TMiddlewareGeneric, IMiddlewareCtx, ILogger } from "../../lib";
 import commandDispatcher, { TCmdArgs, ICommand } from "./commandDispatcher";
 
+export { default as antiSpam } from "./antiSpam";
 export { default as didYouMean } from "./didYouMean";
 export { commandDispatcher, ICommand };
 
+export interface IMessage extends Message {
+  author: User;
+}
+
 export interface IMessageCtx extends IMiddlewareCtx {
-  debug: Debugger;
+  log: ILogger;
+  config: any;
   serverDocument?: { wip: "Not Ready Yet" };
   userDocument?: { wip: "Not Ready Yet" };
   potentialSpam: boolean;
@@ -18,5 +24,5 @@ export interface ICommandCtx extends IMessageCtx {
   author: User;
 }
 
-export type TMessageMid = TMiddlewareGeneric<Message, IMessageCtx>;
-export type TCommandMid = TMiddlewareGeneric<Message, ICommandCtx>;
+export type TMessageMid = TMiddlewareGeneric<IMessage, IMessageCtx>;
+export type TCommandMid = TMiddlewareGeneric<IMessage, ICommandCtx>;
