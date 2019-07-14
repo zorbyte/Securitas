@@ -37,8 +37,8 @@
   ],
   "include": [
     "configs/**/*",
+    //"src/**/*",
     "src/**/*",
-    "src2/**/*",
-    "src/@types/**/*"
+    //"src/@types/**/*"
   ]
 }

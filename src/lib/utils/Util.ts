@@ -46,7 +46,7 @@ class Util {
           log(`Loaded ${displayTypeName} ${componentName}.`);
         }
 
-        // Don't reserve unnecesary memory.
+        // Don't reserve unnecessary memory.
         module.children.pop();
         delete require.cache[filePath];
       }));

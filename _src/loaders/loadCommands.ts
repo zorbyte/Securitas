@@ -1,16 +1,25 @@
 import { MicroframeworkSettings } from "microframework-w3tec";
 import { relative, sep } from "path";
 
-import { IRegisteredCommand, ICommand, Client } from "../lib";
+import { ICommand } from "../middleware/message/commandDispatcher";
 import { Util } from "../lib";
 
+export interface IRegisteredCommand extends ICommand {
+  category: string;
+}
+
 async function loadCommands(settings: MicroframeworkSettings): Promise<void> {
-  let { commands } = settings.getData("client") as Client;
+  let commands: Record<string, IRegisteredCommand | string> = {};
   await Util.scanDir<ICommand>("commands", (_command, path, scanPath) => {
     let relPaths = relative(scanPath, path).split(sep);
     let command = _command as IRegisteredCommand;
     command.category = relPaths[0];
-    commands.set(command);
+    commands[command.name] = command;
+    if (command.aliases) {
+      command.aliases.forEach((alias: string) => {
+        commands[alias] = `__ALIAS@${command.name}`;
+      });
+    }
     return command.name;
   });
 

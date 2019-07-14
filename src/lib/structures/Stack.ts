@@ -1,54 +1,51 @@
 import compose = require("koa-compose");
-import { Stopwatch, Client } from "..";
+import { Context } from "./";
 
-export type TNextFn = () => Promise<any>;
-export type TMiddleware<T, C > = (data: T, ctx: C, next: TNextFn) => any;
-export interface IMiddlewareCtx {
-  client: Client;
-  timer: Stopwatch;
-  [key: string]: any;
+type TNextFn = () => Promise<any>;
+export type TMiddleware<CI> = compose.Middleware<CI>;
+
+interface IMiddlewareFn<C, CI> extends TMiddleware<C> {
+  fn: TMiddleware<CI>;
 }
 
-// Internal types.
-interface IRegisterCtx<T> {
-  data: T;
-  ctx: IMiddlewareCtx;
+interface $TSFIX_IAnyCtx {
+  new (...args: any): any
 }
 
-interface IMiddlewareFn<T, C> extends compose.Middleware<IRegisterCtx<T>> {
-  fn: TMiddleware<T, C>;
-}
-
-class Stack<T, C extends IMiddlewareCtx> {
+/**
+ * @type C The constructor type of the context
+ * @type CI The instance of C.
+ */
+class Stack<C extends (typeof Context) | $TSFIX_IAnyCtx, CI = InstanceType<C>> {
   private composed = false;
-  private middleware: IMiddlewareFn<T, C>[] = [];
-  private composedMiddleware!: compose.ComposedMiddleware<IRegisterCtx<T>>;
+  private middleware: IMiddlewareFn<C, CI>[] = [];
+  private composedMiddleware!: compose.ComposedMiddleware<C>;
 
-  public use(fn: TMiddleware<T, C>): Stack<T, C> {
-    let mdFn: any = async (ctx: IMiddlewareCtx, next: TNextFn) => {
-      await mdFn.fn(ctx.data, ctx.ctx, next);
+  public use(fn: TMiddleware<CI>): Stack<C, CI> {
+    let mdFn: any = async (ctx: CI, next: TNextFn) => {
+      await mdFn.fn(ctx, next);
     };
 
     // Assign it instead of directly using it so that it can be disused later.
     mdFn.fn = fn;
 
-    this.middleware.push(mdFn as IMiddlewareFn<T, C>);
+    this.middleware.push(mdFn as IMiddlewareFn<C, CI>);
     return this;
   }
 
-  public disuse(fn: TMiddleware<T, C>): Stack<T, C> {
+  public disuse(fn: TMiddleware<C>): Stack<C, CI> {
     this.middleware = this.middleware.filter(mdFn => mdFn.fn.toString() !== fn.toString());
     this.compose();
     return this;
   }
 
-  public get handler() {
+  public get handler(): compose.ComposedMiddleware<CI> {
     if (!this.composed) throw new Error("Middleware stack has not been composed!");
-    return this.composedMiddleware;
+    return this.composedMiddleware as unknown as compose.ComposedMiddleware<CI>;
   }
 
   public compose() {
-    this.composedMiddleware = compose<IRegisterCtx<T>>(this.middleware);
+    this.composedMiddleware = compose<C>(this.middleware);
     this.composed = true;
   }
 }

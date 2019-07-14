@@ -1,6 +1,7 @@
-import { ICommand } from "../../middleware/message/commandDispatcher";
 import captchaGen = require("captchagen");
 import { MessageAttachment } from "discord.js";
+
+import { ICommand } from "../../lib";
 
 const captchaCmd: ICommand = {
   name: "captcha",

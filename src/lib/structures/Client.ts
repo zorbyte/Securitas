@@ -8,25 +8,24 @@ import {
 import ow from "ow";
 
 import loaders from "../../loaders";
-import Stack from "./Stack";
-import { Stopwatch, createLogger } from "../utils";
 import {
-  TMessageMid,
-  IMessageCtx,
-  ICommandCtx,
   TCommandMid,
-  IMessage,
-} from "../../middleware/message";
-import { IRegisteredCommand } from "../../loaders/loadCommands";
+  CommandStore,
+  Stack,
+  Stopwatch,
+  createLogger,
+} from "..";
+import { CommandContext } from "../../events/message"
 
 const log = createLogger("client");
 
 class DeXClient extends Client {
-  public commands!: Record<string, IRegisteredCommand | string>;
-  public messageStack = new Stack<IMessage, IMessageCtx & ICommandCtx>();
+  public commands = new CommandStore();
+  public messageStack = new Stack<typeof CommandContext>();
 
   private micro!: Microframework;
 
+  // Fixes Discord.js types.
   public user!: ClientUser;
 
   private async bootstrap(): Promise<Stopwatch | undefined> {
@@ -52,7 +51,7 @@ class DeXClient extends Client {
     }
   }
 
-  public use(fn: TMessageMid | TCommandMid): DeXClient {
+  public use(fn: TCommandMid): DeXClient {
     ow(fn, ow.function);
     this.messageStack.use(fn);
     if (!!this.readyAt) this.messageStack.compose();

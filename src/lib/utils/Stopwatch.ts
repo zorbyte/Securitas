@@ -7,7 +7,7 @@ class Stopwatch {
   private stopped = false;
   private laps: number[] = [];
 
-  public get(lapID: number, toFixed?: number) {
+  public get(lapID: number, toFixed?: number): string {
     const chosenLap = this.laps[lapID];
     if (!chosenLap) throw new RangeError(`Lap with ID ${lapID} does not exist!`);
     return this.toFixTime(toFixed, chosenLap);
@@ -30,7 +30,9 @@ class Stopwatch {
     return finishTime;
   }
 
-  public [kInspect]() {}
+  public [kInspect](): string {
+    return `${this.lap.length ? this.get(this.lap.length - 1) : 0}ms`;
+  }
 }
 
 export default Stopwatch;

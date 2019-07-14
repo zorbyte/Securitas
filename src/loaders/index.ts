@@ -1,4 +1,4 @@
 import loadCommands from "./loadCommands";
-import loadListeners from "./loadListeners";
+import loadEvents from "./loadEvents";
 
-export default [loadListeners, loadCommands];
+export default [loadEvents, loadCommands];

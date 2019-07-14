@@ -1,5 +1,7 @@
-import { ICommand } from "../../middleware/message/commandDispatcher";
-import { MessageEmbed } from "discord.js";
+import { MessageEmbed as _M } from "discord.js";
+
+import { ICommand } from "../../lib";
+
 
 const help: ICommand = {
   name: "help",
@@ -8,7 +10,8 @@ const help: ICommand = {
     name: "command",
     required: false,
   }],
-  run(msg, ctx, next) {
+  run(_ctx, _next) {
+    /*
     const { args, client, config } = ctx;
     const embed = new MessageEmbed();
 
@@ -61,6 +64,7 @@ const help: ICommand = {
     }
 
     msg.channel.send(embed);
+    */
   },
 };
 

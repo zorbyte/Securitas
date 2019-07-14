@@ -1,10 +1,10 @@
-import { ICommand } from "../../middleware/message/commandDispatcher";
+import { ICommand } from "../../lib";
 import { inspect } from "util";
 
 const ping: ICommand = {
   name: "spaminfo",
   aliases: ["spam", "s"],
-  run(msg, { spamInfo }) {
+  run({ msg, spamInfo }) {
     msg.channel.send(`\`\`\`js\n${inspect(spamInfo)}\`\`\``);
   },
 }

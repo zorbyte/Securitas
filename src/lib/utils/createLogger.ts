@@ -9,7 +9,7 @@ export interface ILogger {
 }
 
 function createLogger(name: string): ILogger {
-  // @ts-ignore Setup colours.
+  // @ts-ignore Setup colours, this is a hidden debug API.
   const colourNum = debug.selectColor(name);
   const colourCode = `\u001B[3${(colourNum < 8 ? colourNum : "8;5;" + colourNum)};1m`;
   const useCol = chalk.supportsColor;
@@ -18,9 +18,7 @@ function createLogger(name: string): ILogger {
   const logMessage = (isErrorMsg: boolean, ...data: any[]) => {
     if (isErrorMsg) {
       const [colStart, colEnd] = chalk.red("_").split("_");
-      data = data.map(arg => isError(arg) ? arg.stack : arg);
-      data.unshift(colStart);
-      data.push(colEnd);
+      data = data.map(arg => isError(arg) ? `\n${colStart}${arg.stack}${colEnd}` : arg);
     }
 
     data = data
