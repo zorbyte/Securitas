@@ -1,7 +1,7 @@
 {
-  "name": "dex-bot",
-  "version": "0.0.3",
-  "description": "A Discord bot that does something?",
+  "name": "securitas-bot",
+  "version": "0.0.4",
+  "description": "A security Discord bot",
   "main": "./dist/src/index.js",
   "scripts": {
     "start": "tsc && cross-env NODE_NO_WARNINGS=1 node ."
@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/zorbyte/DeX#readme",
   "dependencies": {
-    "@discordjs/uws": "^11.149.1",
+    "@keyv/redis": "^1.3.8",
     "canvas": "^2.5.0",
     "captchagen": "^1.2.0",
     "chalk": "^2.4.2",
@@ -26,19 +26,22 @@
     "didyoumean2": "^3.1.1",
     "discord.js": "discordjs/discord.js",
     "dotenv": "^8.0.0",
-    "erlpack": "github:discordapp/erlpack",
     "fs-nextra": "^0.4.5",
+    "fusedb": "^1.0.28",
+    "keyv": "^3.1.0",
     "koa-compose": "^4.1.0",
     "microframework-w3tec": "^0.6.3",
+    "nanoid": "^2.0.3",
     "ow": "^0.13.2",
-    "zlib-sync": "^0.1.4",
     "zucc": "^0.1.2"
   },
   "devDependencies": {
     "@types/chalk": "^2.2.0",
     "@types/debug": "^4.1.4",
     "@types/dotenv": "^6.1.1",
+    "@types/keyv": "^3.1.0",
     "@types/koa-compose": "^3.2.4",
+    "@types/nanoid": "^2.0.0",
     "@types/node": "^12.6.1",
     "cross-env": "^5.2.0",
     "typescript": "^3.5.3"

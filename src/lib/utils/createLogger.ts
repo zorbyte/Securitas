@@ -1,5 +1,6 @@
 import chalk from "chalk";
 import debug from "debug";
+import cleanStack = require("clean-stack");
 import { isError } from "util";
 
 export interface ILogger {
@@ -7,6 +8,8 @@ export interface ILogger {
   error(...errorData: (Error & any)[]): void;
   (...data: any[]): ILogger;
 }
+
+const [colStart, colEnd] = chalk.red("_").split("_");
 
 function createLogger(name: string): ILogger {
   // @ts-ignore Setup colours, this is a hidden debug API.
@@ -16,20 +19,26 @@ function createLogger(name: string): ILogger {
   const loggerName = `${useCol ? colourCode : ""}${name}${useCol ? "\u001B[0m" : ""}`;
 
   const logMessage = (isErrorMsg: boolean, ...data: any[]) => {
-    if (isErrorMsg) {
-      const [colStart, colEnd] = chalk.red("_").split("_");
-      data = data.map(arg => isError(arg) ? `\n${colStart}${arg.stack}${colEnd}` : arg);
-    }
+    if (isErrorMsg) data = data
+      .map(arg => isError(arg) ? `\n${cleanStack(arg.stack as string)}` : arg);
+    
+    // Colours.
+    const iColStart = isErrorMsg ? colStart : "";
+    const iColEnd = isErrorMsg ? colEnd : "";
 
     data = data
       .join("")
       .split("\n")
-      .map((line, ind) => ind === 0 ? line : `\n  ${loggerName} ${line}`);
+      .map((line, ind) => {
+        line = `${iColStart}${line}${iColEnd}`;
+        return ind === 0 ? line : `\n  ${loggerName} ${line}`;
+      });
 
     console[isErrorMsg ? "error" : "info"](`  ${loggerName}`, ...data);
   }
 
   function loggerInst(...data: any[]) {
+    if (process.env.NODE_ENV === "production") return;
     logMessage(false, ...data);
   }
 

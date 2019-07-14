@@ -1,7 +1,6 @@
-import { MessageEmbed as _M } from "discord.js";
+import { MessageEmbed } from "discord.js";
 
 import { ICommand } from "../../lib";
-
 
 const help: ICommand = {
   name: "help",
@@ -10,25 +9,16 @@ const help: ICommand = {
     name: "command",
     required: false,
   }],
-  run(_ctx, _next) {
-    /*
-    const { args, client, config } = ctx;
+  run(ctx, next) {
+    const { msg, args, client, config } = ctx;
     const embed = new MessageEmbed();
 
     if (!Array.isArray(args) && args.command) {
-      // Move this to its own file later.
+      const command = client.commands.get(args.command);
 
-      // It could potentially be an alias.
-      const cmdOrAlias = client.commands[args.command];
-      let command = cmdOrAlias as ICommand;
-      if (typeof cmdOrAlias === "string" && cmdOrAlias.startsWith("__ALIAS@")) {
-        command = client.commands[cmdOrAlias.slice("__ALIAS@".length)] as ICommand;
-      }
-
-      // If there is no command that matches in the object.
       if (!command) {
         ctx.didYouMean = args.command;
-        return next()
+        return next();
       }
 
       let helpArgs = "";
@@ -49,8 +39,7 @@ const help: ICommand = {
         .addField("Optional", "[]")
         .addField("Required", "<>");
     
-      for (const [name, cmdEntry] of Object.entries(client.commands)) {
-        if (typeof cmdEntry === "string") continue;
+      for (const [name, cmdEntry] of client.commands) {
         let helpArgs = "";
         if (cmdEntry.args) helpArgs += cmdEntry.args
           .map(arg => {
@@ -64,7 +53,6 @@ const help: ICommand = {
     }
 
     msg.channel.send(embed);
-    */
   },
 };
 

@@ -1,4 +1,4 @@
-import { TListener } from "../loaders/loadListeners";
+import { TListener } from "../loaders/loadEvents";
 import { createLogger } from "../lib";
 
 const log = createLogger("events:warn");

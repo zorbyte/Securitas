@@ -3,7 +3,7 @@ import chalk from "chalk";
 import { inspect } from "util";
 import { join, extname } from "path";
 
-import { createLogger, ILogger } from ".";
+import { createLogger, ILogger, Stopwatch } from "..";
 
 /**
  * @returns [string] The name of the item.
@@ -25,24 +25,26 @@ class Util {
     return str.replace(new RegExp(`(.{${maxLength - 1}})..+`), "$1...");
   }
 
-  public static async scanDir<T>(componentType: string, loadFunc: TLoadFunc<T>): Promise<void[]> {
+  public static async scanDir<T>(componentType: string, loadFunc: TLoadFunc<T>): Promise<void> {
     const log = createLogger(`loader:${componentType}`);
+    const displayTypeName = componentType.endsWith("s")
+      ? componentType.slice(0, -1)
+      : componentType;
 
     log(`Scanning ${componentType} directory.`);
     const scanPath = join(__dirname, "..", "..", componentType);
+
+    const timer = new Stopwatch();
     const filePaths = await scan(scanPath, {
       filter: (stats, path) => stats.isFile() && extname(path) === ".js",
     });
 
-    return await Promise.all([...filePaths.keys()]
+    await Promise.all([...filePaths.keys()]
       .map(async filePath => {
         const { default: component }: { default: T } = await import(filePath);
 
         const componentName = await loadFunc(component, filePath, scanPath, log);
         if (componentName) {
-          const displayTypeName = componentType.endsWith("s")
-            ? componentType.slice(0, -1)
-            : componentType;
           log(`Loaded ${displayTypeName} ${componentName}.`);
         }
 
@@ -50,6 +52,8 @@ class Util {
         module.children.pop();
         delete require.cache[filePath];
       }));
+    
+    log(`Finished loading ${displayTypeName} in ${timer.stop(2)}ms`);
   }
 }
 

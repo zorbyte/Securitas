@@ -1,17 +1,17 @@
-import { TCommandMid } from ".";
+import { TCommandMid } from "../../lib";
 
-interface ISpamInfo {
+export interface ISpamInfo {
   msgTime: number;
   fastMsgAmnt: number;
   content: string;
   channelID: string;
 }
 
-const spamInfo = new Map<string, ISpamInfo>();
-
-const antiSpam: TCommandMid = (msg, ctx, next) => {
-  if (msg.author.id === ctx.client.user.id) return next();
-  let lastMsg = spamInfo.get(msg.author.id);
+const antiSpam: TCommandMid = async (ctx, next) => {
+  const { msg, client, config } = ctx;
+  const { spamCache } = client;
+  if (msg.author.id === client.user.id) return next();
+  let lastMsg = await spamCache.get(msg.author.id);
   if (!lastMsg) {
     lastMsg = {
       msgTime: 0,
@@ -21,20 +21,19 @@ const antiSpam: TCommandMid = (msg, ctx, next) => {
     }
   }
 
-  const threshold = ctx.config.spamThreshold;
+  const threshold = config.spamThreshold;
   let isSpamMsg = (msg.createdTimestamp - lastMsg.msgTime <= 2000) && lastMsg.channelID === msg.channel.id;
   let fastMsgAmnt = isSpamMsg ? lastMsg.fastMsgAmnt + 1 : 0;
-  const isSpam = fastMsgAmnt >= (msg.content === lastMsg.content ? ~~(threshold / 2) : threshold);
+  const isSpam = fastMsgAmnt >= threshold;
   if (isSpam) fastMsgAmnt = 0;
-  spamInfo.set(msg.author.id, {
+  spamCache.set(msg.author.id, {
     msgTime: msg.createdTimestamp,
     fastMsgAmnt,
     content: msg.content,
     channelID: msg.channel.id,
-  });
+  }, 2000);
 
   if (isSpam) return msg.channel.send("Spam!");
-  ctx.spamInfo = spamInfo;
   next();
 };
 

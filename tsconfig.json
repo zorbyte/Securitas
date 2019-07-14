@@ -29,7 +29,8 @@
     "types": [
       "discord.js",
       "node",
-      "dotenv"
+      "dotenv",
+      "keyv"
     ]
   },
   "exclude": [

@@ -1,4 +1,5 @@
 {
   "prefix": "s!",
-  "spamThreshold": 8
+  "spamThreshold": 4,
+  "redisUri": ""
 }

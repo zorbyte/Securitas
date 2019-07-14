@@ -26,6 +26,10 @@ export interface IRegisteredCommand extends ICommand {
 class CommandStore {
   private items: Record<string, ICommand | string> = {};
 
+  public keys(): string[] {
+    return Object.keys(this.items);
+  }
+
   public get(name: string): ICommand | null {
     if (!(name in this.items)) return null;
     let command = this.items[name];

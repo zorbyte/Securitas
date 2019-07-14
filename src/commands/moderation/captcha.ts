@@ -6,7 +6,7 @@ import { ICommand } from "../../lib";
 const captchaCmd: ICommand = {
   name: "captcha",
   aliases: ["c"],
-  async run(msg) {
+  run({ msg }) {
     const captcha = captchaGen.create();
     captcha.generate();
 

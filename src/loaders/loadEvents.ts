@@ -6,7 +6,7 @@ import { Client, Util } from "../lib";
 // Use the client so data and event types are still available.
 export type TListener = (client: Client) => Client;
 
-const loadEvents = (settings: MicroframeworkSettings): Promise<void[]> =>
+const loadEvents = (settings: MicroframeworkSettings): Promise<void> =>
   Util.scanDir<TListener>("events", (listener, path, scanPath, log) => {
     let listenerName = path.slice(scanPath.length + 1, -3);
     let separatedName = listenerName.split(sep);

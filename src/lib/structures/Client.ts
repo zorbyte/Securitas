@@ -5,6 +5,7 @@ import {
   MicroframeworkSettings,
   Microframework,
 } from "microframework-w3tec";
+import Keyv = require("keyv");
 import ow from "ow";
 
 import loaders from "../../loaders";
@@ -15,13 +16,14 @@ import {
   Stopwatch,
   createLogger,
 } from "..";
-import { CommandContext } from "../../events/message"
+import { CommandContext, ISpamInfo } from "../../events/message"
 
 const log = createLogger("client");
 
 class DeXClient extends Client {
   public commands = new CommandStore();
   public messageStack = new Stack<typeof CommandContext>();
+  public spamCache!: Keyv<ISpamInfo>;
 
   private micro!: Microframework;
 
@@ -44,6 +46,7 @@ class DeXClient extends Client {
       ] as MicroframeworkLoader[]);
       bootTimer.lap(2);
 
+      this.spamCache = this.micro.settings.getData("spamCache");
       this.commands = this.micro.settings.getData("commands") || {};
       return bootTimer;
     } catch (err) {

@@ -1,6 +1,17 @@
-# DeX - A Discord bot
+# Securitas - A Discord bot
 
-This bot does idk what tbh.
+A Discord security bot.
+
+### Production
+
+Please ensure these dependencies are also isntalled,
+```json
+{
+    "@discordjs/uws": "^11.149.1",
+    "erlpack": "github:discordapp/erlpack",
+    "zlib-sync": "^0.1.4"
+}
+```
 ### Inspiration
 
 The setup is inspired by [hershel](https://github.com/hershel/hershel), but with more production ready features.
