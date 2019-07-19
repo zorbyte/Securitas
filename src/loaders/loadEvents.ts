@@ -13,13 +13,13 @@ const loadEvents = (settings: MicroframeworkSettings): Promise<void> =>
     if (separatedName.length > 1) {
       if (separatedName[1] !== "index") return;
       listenerName = separatedName[0];
-    };
+    }
 
     // Ignore malformed listeners.
     if (typeof listener !== "function") {
       log(`Event ${listenerName} is malformed... ignoring!`)
       return;
-    };
+    }
 
     // Run the listener registration function.
     listener(settings.getData("client"));

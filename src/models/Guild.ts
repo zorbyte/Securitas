@@ -1,13 +1,15 @@
-import { Field, Model } from "fusedb";
+import { Column, Model, HasAndBelongsToMany } from "pims";
+import { User } from ".";
 
-class Guild extends Model<Guild> {
-  @Field() 
+@Model({ database: "securitas", table: "guilds" })
+class Guild {
+  @Column({ primary: true })
   public id!: string;
 
-  @Field()
+  @Column()
   public prefix!: string;
   
-  @Field()
+  @Column()
   public antiSpam!: boolean;
 }
 

@@ -1,12 +1,24 @@
-import { Field, Validate, Model } from "fusedb";
+import { Column, Model, HasAndBelongsToMany } from "pims";
+import Guild from "./Guild";
 
-class User extends Model<User> {
-  @Field() 
+export enum EPermisions {
+  User,
+  Moderator,
+  Administrator,
+  Owner,
+  BotOwner,
+}
+
+@Model({ database: "securitas", table: "users" })
+class User {
+  @Column({ primary: true })
   public id!: string;
+  
+  @Column({ secondary: true })
+  public email!: boolean;
 
-  @Field()
-  @Validate({ email : true })
-  public email!: string;
+  @Column()
+  public perm?: EPermisions;
 }
 
 export default User;

@@ -6,6 +6,7 @@ import {
   Microframework,
 } from "microframework-w3tec";
 import Keyv = require("keyv");
+import { RethinkAdapter } from "pims-rethinkdb";
 import ow from "ow";
 
 import loaders from "../../loaders";
@@ -18,12 +19,12 @@ import {
 } from "..";
 import { CommandContext, ISpamInfo } from "../../events/message"
 
-const log = createLogger("client");
-
-class DeXClient extends Client {
+class SecuritasClient extends Client {
   public commands = new CommandStore();
   public messageStack = new Stack<typeof CommandContext>();
-  public spamCache!: Keyv<ISpamInfo>;
+  public redisCache!: Keyv<ISpamInfo>;
+  public adapter!: RethinkAdapter;
+  public log = createLogger("client");
 
   private micro!: Microframework;
 
@@ -32,7 +33,7 @@ class DeXClient extends Client {
 
   private async bootstrap(): Promise<Stopwatch | undefined> {
     try {
-      log("Starting bootstrapping process.");
+      this.log("Starting bootstrapping process.");
       const bootTimer = new Stopwatch();
       this.micro = await bootstrapMicroframework([
         async (settings: MicroframeworkSettings) => {
@@ -46,15 +47,17 @@ class DeXClient extends Client {
       ] as MicroframeworkLoader[]);
       bootTimer.lap(2);
 
-      this.spamCache = this.micro.settings.getData("spamCache");
+      this.redisCache = this.micro.settings.getData("cache");
+      this.adapter = this.micro.settings.getData("adapter");
       this.commands = this.micro.settings.getData("commands") || {};
       return bootTimer;
     } catch (err) {
-      log.error("An error occurred while bootstrapping.", err);
+      this.log.error("An error occurred while bootstrapping.", err);
+      process.exit(1);
     }
   }
 
-  public use(fn: TCommandMid): DeXClient {
+  public use(fn: TCommandMid): SecuritasClient {
     ow(fn, ow.function);
     this.messageStack.use(fn);
     if (!!this.readyAt) this.messageStack.compose();
@@ -62,24 +65,34 @@ class DeXClient extends Client {
   }
 
   public async login(token = process.env.TOKEN): Promise<string> {
-    // Start bootstrapping.
-    const bootTimer = await this.bootstrap();
+    try {
+      // Start bootstrapping.
+      const bootTimer = await this.bootstrap();
 
-    // If there is no timer that means there is an error.
-    if (!bootTimer) return process.exit(1);
-    const bootstrapTime = bootTimer.get(0);
-    log(`Bootstrap completed in ${bootstrapTime}ms.`);
+      // If there is no timer that means there is an error.
+      if (!bootTimer) return process.exit(1);
+      const bootstrapTime = bootTimer.get(0);
+      this.log(`Bootstrap completed in ${bootstrapTime}ms.`);
 
-    // Login.
-    const tokenPartial = token ? token.substr(0, 13) : "";
-    log(`Logging in with ${token ? `token ${tokenPartial}${"*".repeat(token.length - ~~(tokenPartial.length * 2.75))}` : "an unknown token"}.`);
-    const loginResp = await super.login(token);
+      // Login.
+      const tokenPartial = token ? token.substr(0, 13) : "";
+      this.log(`Logging in with ${token ? `token ${tokenPartial}${"*".repeat(token.length - ~~(tokenPartial.length * 2.75))}` : "an unknown token"}.`);
+      let loginResp = await super.login(token)
+        .catch(err => {
+          this.log.error(`Failed to log into Discord.`, err);
+          process.exit(1);
+        });
+      
+      loginResp = loginResp as string;
 
-    // Timers.
-    const totalTime = bootTimer.stop();
-    const loginTime = parseFloat(totalTime) - parseFloat(bootstrapTime);
-    log(`Successfuly logged in with a total boot time of ${totalTime}ms and login time of ${loginTime}ms.`);
-    return loginResp;
+      // Timers.
+      const totalTime = bootTimer.stop();
+      const loginTime = parseFloat(totalTime) - parseFloat(bootstrapTime);
+      this.log(`Successfully logged in with a total boot time of ${totalTime}ms and login time of ${loginTime}ms.`);
+      return loginResp;
+    } catch (err) {
+      throw err;
+    }
   }
 
   public async destroy() {
@@ -91,4 +104,4 @@ class DeXClient extends Client {
   }
 }
 
-export default DeXClient;
+export default SecuritasClient;

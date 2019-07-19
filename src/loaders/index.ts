@@ -1,6 +1,6 @@
 import loadCommands from "./loadCommands";
 import loadEvents from "./loadEvents";
-import connectSpamCache from "./connectSpamCache";
-import connectDB from "./connectDB"
+import connectSpamCache from "./connectCache";
+import connectDB from "./connectDB";
 
-export default [loadEvents, loadCommands, connectSpamCache, connectDB];
+export default [connectDB, connectSpamCache, loadEvents, loadCommands];

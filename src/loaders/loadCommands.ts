@@ -15,6 +15,6 @@ async function loadCommands(settings: MicroframeworkSettings): Promise<void> {
   });
 
   settings.setData("commands", commands);
-};
+}
 
 export default loadCommands;

@@ -4,7 +4,8 @@
   "description": "A security Discord bot",
   "main": "./dist/src/index.js",
   "scripts": {
-    "start": "tsc && node ."
+    "start": "tsc && node .",
+    "installDepsMac": "CXXFLAGS=\"-mmacosx-version-min=10.9\" LDFLAGS=\"-mmacosx-version-min=10.9\" yarn install"
   },
   "repository": {
     "type": "git",
@@ -17,6 +18,9 @@
   },
   "homepage": "https://github.com/zorbyte/DeX#readme",
   "dependencies": {
+    "@discordjs/uws": "^11.149.1",
+    "erlpack": "github:discordapp/erlpack",
+    "zlib-sync": "^0.1.4",
     "@keyv/redis": "^1.3.8",
     "canvas": "^2.5.0",
     "captchagen": "^1.2.0",
@@ -27,13 +31,15 @@
     "discord.js": "discordjs/discord.js",
     "dotenv": "^8.0.0",
     "fs-nextra": "^0.4.5",
-    "fusedb": "^1.0.28",
     "keyv": "^3.1.0",
     "koa-compose": "^4.1.0",
     "microframework-w3tec": "^0.6.3",
-    "mongodb": "^3.2.7",
-    "nanoid": "^2.0.3",
     "ow": "^0.13.2",
+    "pims": "^1.0.3",
+    "pims-rethinkdb": "^1.0.0",
+    "rethinkdb-ts": "^2.4.0-rc.15",
+    "typesafe-joi": "^2.0.6",
+    "unescape-js": "^1.1.1",
     "zucc": "^0.1.2"
   },
   "devDependencies": {
@@ -44,6 +50,7 @@
     "@types/koa-compose": "^3.2.4",
     "@types/nanoid": "^2.0.0",
     "@types/node": "^12.6.1",
+    "@types/rethinkdbdash": "types/rethinkdbdash",
     "cross-env": "^5.2.0",
     "typescript": "^3.5.3"
   }

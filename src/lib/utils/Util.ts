@@ -53,7 +53,7 @@ class Util {
         delete require.cache[filePath];
       }));
     
-    log(`Finished loading ${componentType} in ${timer.stop(2)}ms`);
+    log(`Finished loading ${componentType} in ${timer.stop(2)}ms.`);
   }
 }
 

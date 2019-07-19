@@ -7,11 +7,10 @@ export interface ISpamInfo {
   channelID: string;
 }
 
-const antiSpam: TCommandMid = async (ctx, next) => {
-  const { msg, client, config } = ctx;
-  const { spamCache } = client;
-  if (msg.author.id === client.user.id) return next();
-  let lastMsg = await spamCache.get(msg.author.id);
+const antiSpam: TCommandMid = async ({ msg, guild, client: { user, redisCache }, config }, next) => {
+  if (msg.author.id === user.id || (guild && !guild.antiSpam)) return next();
+  const accessor = `spam:${msg.author.id}`;
+  let lastMsg = await redisCache.get(accessor);
   if (!lastMsg) {
     lastMsg = {
       msgTime: 0,
@@ -26,7 +25,7 @@ const antiSpam: TCommandMid = async (ctx, next) => {
   let fastMsgAmnt = isSpamMsg ? lastMsg.fastMsgAmnt + 1 : 0;
   const isSpam = fastMsgAmnt >= threshold;
   if (isSpam) fastMsgAmnt = 0;
-  spamCache.set(msg.author.id, {
+  redisCache.set(accessor, {
     msgTime: msg.createdTimestamp,
     fastMsgAmnt,
     content: msg.content,

@@ -5,8 +5,8 @@ export type TCmdArgs = Record<string, any>;
 const escapeRegex = (str: string) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 const commandDispatcher: TCommandMid = async (ctx, next) => {
-  const { msg, client: { user, commands }, config } = ctx;
-  const prefixRegex = new RegExp(`^(<@!?${user.id}>|${escapeRegex(config.prefix)})\\s*`);
+  const { msg, client: { user, commands }, prefix } = ctx;
+  const prefixRegex = new RegExp(`^(<@!?${user.id}>|${escapeRegex(prefix)})\\s*`);
 
   // Only reply to valid messages.
   if (!prefixRegex.test(msg.content) || msg.author.bot) return next();

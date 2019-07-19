@@ -9,6 +9,7 @@ import CommandContext from "./Context";
 import antiSpam, { ISpamInfo } from "./antiSpam";
 import commandDispatcher from "./commandDispatcher";
 import didYouMean from "./didYouMean";
+import getGuildDoc from "./getGuildDoc.js";
 
 export interface IMessage extends Message {
   author: User;
@@ -17,6 +18,7 @@ export interface IMessage extends Message {
 const log = createLogger("events:message");
 const readyListener: TListener = client => {
   client
+    .use(getGuildDoc)
     .use(antiSpam)
     .use(commandDispatcher)
     .use(didYouMean);
