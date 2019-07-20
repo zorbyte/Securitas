@@ -1,18 +1,19 @@
-import { TCommandMid, Util } from "../../lib";
+import { CommandMid, Util } from "../../lib";
 
-export type TCmdArgs = Record<string, any>;
+export type CmdArgs = Record<string, any>;
 
-const escapeRegex = (str: string) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const escapeRegex = (str: string): string => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
-const commandDispatcher: TCommandMid = async (ctx, next) => {
+const commandDispatcher: CommandMid = async (ctx, next): Promise<void> => {
   const { msg, client: { user, commands }, prefix } = ctx;
   const prefixRegex = new RegExp(`^(<@!?${user.id}>|${escapeRegex(prefix)})\\s*`);
 
   // Only reply to valid messages.
   if (!prefixRegex.test(msg.content) || msg.author.bot) return next();
 
-  // @ts-ignore I have no idea what is wrong here.
-  const [_, matchedPrefix] = msg.content.match(prefixRegex);
+  const matchedPrefixArr = prefixRegex.exec(msg.content);
+  if (!matchedPrefixArr) return next();
+  const matchedPrefix = matchedPrefixArr[1];
 
   // Separate the content.
   let [cmd, ...args] = msg.content.slice(matchedPrefix.length)
@@ -33,11 +34,11 @@ const commandDispatcher: TCommandMid = async (ctx, next) => {
   }
 
   // Build the arguments by matching them with the command info.
-  const builtArgs: TCmdArgs = {};
+  const builtArgs: CmdArgs = {};
   if (command.args && args.length) {
-    const cmdArgs: any[] = command.args;
-    for (const arg in cmdArgs)
-      builtArgs[cmdArgs[arg].name] = args[arg];
+    // eslint-ignore-next-line guard-for-in
+    const cmdArgs = command.args;
+    for (const arg of cmdArgs) builtArgs[arg.name] = arg;
   }
 
   // Set the built args to the context.

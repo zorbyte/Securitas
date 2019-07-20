@@ -1,8 +1,8 @@
-import { TListener } from "../loaders/loadEvents";
+import { Listener } from "../loaders/loadEvents";
 import { createLogger } from "../lib";
 
 const log = createLogger("events:error");
-const readyListener: TListener = client => client.on("error", (error: any) => {
+const readyListener: Listener = client => client.on("error", (error: any) => {
   log.error("An error has occurred!", error.message);
 });
 

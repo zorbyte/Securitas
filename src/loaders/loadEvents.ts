@@ -4,10 +4,10 @@ import { MicroframeworkSettings } from "microframework-w3tec";
 import { Client, Util } from "../lib";
 
 // Use the client so data and event types are still available.
-export type TListener = (client: Client) => Client;
+export type Listener = (client: Client) => Client;
 
 const loadEvents = (settings: MicroframeworkSettings): Promise<void> =>
-  Util.scanDir<TListener>("events", (listener, path, scanPath, log) => {
+  Util.scanDir<Listener>("events", (listener, path, scanPath, log) => {
     let listenerName = path.slice(scanPath.length + 1, -3);
     const separatedName = listenerName.split(sep);
     if (separatedName.length > 1) {

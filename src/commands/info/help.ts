@@ -1,8 +1,8 @@
 import { MessageEmbed } from "discord.js";
 
-import { ICommand } from "../../lib";
+import { Command } from "../../lib";
 
-const help: ICommand = {
+const help: Command = {
   name: "help",
   aliases: ["h", "cmds"],
   args: [{

@@ -1,7 +1,7 @@
-import { TCommandMid } from "../../lib";
+import { CommandMid } from "../../lib";
 import { Guild } from "../../models";
 
-const getGuildDoc: TCommandMid = async (ctx, next) => {
+const getGuildDoc: CommandMid = async (ctx, next) => {
   const { msg, client, config } = ctx;
   ctx.prefix = config.prefix;
   if (!msg.guild) return next();

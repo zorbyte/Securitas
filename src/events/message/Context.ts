@@ -1,14 +1,14 @@
 import { Guild } from "../../models";
-import { Context, Client, ILogger, TCmdArgs } from "../../lib";
-import { IMessage } from ".";
+import { Context, Client, Logger, CmdArgs } from "../../lib";
+import { CmdMessage } from ".";
 
 class CommandContext extends Context {
   public rawArgs!: string[];
   public prefix!: string;
   public guild?: Guild;
-  public args!: TCmdArgs;
+  public args!: CmdArgs;
 
-  constructor(public client: Client, public msg: IMessage, public config: any, public log: ILogger) {
+  constructor(public client: Client, public msg: CmdMessage, public config: any, public log: Logger) {
     super(client);
   }
 }

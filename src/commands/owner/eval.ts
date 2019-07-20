@@ -1,12 +1,12 @@
-import { ICommand } from "../../lib";
+import { Command } from "../../lib";
 
-const clean = (text: string) => {
+const clean = (text: string): string => {
   if (typeof (text) === "string")
     return text.replace(/`/g, `\`${String.fromCharCode(8203)}`).replace(/@/g, `@${String.fromCharCode(8203)}`);
   return text;
 };
 
-const evalCmd: ICommand = {
+const evalCmd: Command = {
   name: "eval",
   aliases: ["ev"],
   args: [{
@@ -18,6 +18,7 @@ const evalCmd: ICommand = {
     try {
       if (msg.author.id !== config.ownerID) return;
       const code = rawArgs.join(" ");
+      // eslint-disable-next-line no-eval
       let evaled = eval(code);
 
       if (typeof evaled !== "string") evaled = require("util").inspect(evaled);

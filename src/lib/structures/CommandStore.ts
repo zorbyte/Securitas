@@ -1,43 +1,43 @@
 import { CommandContext } from "../../events/message";
-import { TMiddleware } from "..";
+import { Middleware } from "..";
 
-export interface ICommandArgument {
+export interface CommandArgument {
   name: string;
   required: boolean;
   type?: string;
   description?: string;
 }
 
-export type TCmdArgs = Record<string, any> | string[];
+export type CmdArgs = Record<string, any> | string[];
 
-export type TCommandMid = TMiddleware<CommandContext>;
+export type CommandMid = Middleware<CommandContext>;
 
-export interface ICommand {
+export interface Command {
   name: string;
   aliases?: string[];
-  args?: ICommandArgument[];
-  run: TCommandMid;
+  args?: CommandArgument[];
+  run: CommandMid;
 }
 
-export interface IRegisteredCommand extends ICommand {
+export interface RegisteredCommand extends Command {
   category: string;
 }
 
 class CommandStore {
-  private items: Record<string, ICommand | string> = {};
+  private items: Record<string, Command | string> = {};
 
   public keys(): string[] {
     return Object.keys(this.items);
   }
 
-  public get(name: string): ICommand | null {
+  public get(name: string): Command | null {
     if (!(name in this.items)) return null;
     let command = this.items[name];
-    if (typeof command === "string") command = this.items[command] as ICommand;
+    if (typeof command === "string") command = this.items[command] as Command;
     return command;
   }
 
-  public set(command: ICommand): void {
+  public set(command: Command): void {
     const { name } = command;
     if (name in this.items) throw new Error("Command already exists!");
     if (command.aliases)
@@ -48,7 +48,7 @@ class CommandStore {
     this.items[name] = command;
   }
 
-  public*[Symbol.iterator](): IterableIterator<[string, ICommand]> {
+  public*[Symbol.iterator](): IterableIterator<[string, Command]> {
     for (const [commandName, command] of Object.entries(this.items)) {
       if (typeof command === "string") continue;
       yield [commandName, command];

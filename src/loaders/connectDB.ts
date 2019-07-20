@@ -1,15 +1,16 @@
+import { types } from "util";
 import { RethinkAdapter } from "pims-rethinkdb";
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { ReqlClient } from "rethinkdbdash";
 import { MicroframeworkSettings } from "microframework-w3tec";
 import unescapeJS = require("unescape-js");
-import { isError } from "util";
-
 import { createLogger, Stopwatch } from "../lib";
 import models from "../models";
 
 const log = createLogger("loader:database");
 function connectDB(settings: MicroframeworkSettings): Promise<void> {
-  return new Promise<void>(async (ok, fail) => {
+  // eslint-disable-next-line no-async-promise-executor
+  return new Promise<void>(async (resolve, reject) => {
     try {
       let isDone = false;
       log("Connecting to RethinkDB...");
@@ -35,13 +36,16 @@ function connectDB(settings: MicroframeworkSettings): Promise<void> {
             msg = possibleErr[0];
           }
           msg = unescapeJS(msg).replace(/\n/, "").trim();
-          msg = !(msg.endsWith(".") || msg.endsWith(".")) ? `${msg}.` : msg;
-          if (isError(msg)) {
-            if (!isDone) return fail(msg);
+          msg = (msg.endsWith(".") || msg.endsWith(".")) ? msg : `${msg}.`;
+
+          // @ts-ignore
+          if (types.isNativeError(msg) || msg instanceof Error) {
+            if (!isDone) return reject(msg);
             log.error(msg);
           }
           if (err) {
-            if (!isDone) return fail([msg, err]);
+            // eslint-disable-next-line prefer-promise-reject-errors
+            if (!isDone) return reject([msg, err]);
             log.error(msg, err);
           }
           log(msg);
@@ -53,8 +57,6 @@ function connectDB(settings: MicroframeworkSettings): Promise<void> {
       const dbList = await r.dbList().run();
       if (!dbList.includes("securitas")) await r.dbCreate("securitas").run();
 
-      // Await adapter.join(new Guild(), "mods").catch(log.error);
-
       await adapter.ensure();
       settings.onShutdown(() => adapter.close());
 
@@ -62,9 +64,9 @@ function connectDB(settings: MicroframeworkSettings): Promise<void> {
 
       settings.setData("adapter", adapter);
       isDone = true;
-      ok();
-    } catch (err) {
-      fail(err);
+      resolve();
+    } catch (error) {
+      reject(error);
     }
   })
     .catch((err: any | any[]) => {
@@ -74,6 +76,7 @@ function connectDB(settings: MicroframeworkSettings): Promise<void> {
       else
         log.error(msg, err);
 
+      // eslint-disable-next-line unicorn/no-process-exit
       process.exit(1);
     });
 }

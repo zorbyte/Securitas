@@ -1,13 +1,13 @@
-import { TCommandMid } from "../../lib";
+import { CommandMid } from "../../lib";
 
-export interface ISpamInfo {
+export interface SpamInfo {
   msgTime: number;
   fastMsgAmnt: number;
   content: string;
   channelID: string;
 }
 
-const antiSpam: TCommandMid = async ({ msg, guild, client: { user, redisCache }, config }, next) => {
+const antiSpam: CommandMid = async ({ msg, guild, client: { user, redisCache }, config }, next) => {
   if (msg.author.id === user.id || (guild && !guild.antiSpam)) return next();
   const accessor = `spam:${msg.author.id}`;
   let lastMsg = await redisCache.get(accessor);

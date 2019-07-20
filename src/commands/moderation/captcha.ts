@@ -1,9 +1,9 @@
 import captchaGen = require("captchagen");
 import { MessageAttachment } from "discord.js";
 
-import { ICommand } from "../../lib";
+import { Command } from "../../lib";
 
-const captchaCmd: ICommand = {
+const captchaCmd: Command = {
   name: "captcha",
   aliases: ["c"],
   run({ msg }) {

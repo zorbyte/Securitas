@@ -1,8 +1,8 @@
-import { TListener } from "../loaders/loadEvents";
+import { Listener } from "../loaders/loadEvents";
 import { createLogger } from "../lib";
 
 const log = createLogger("events:warn");
-const readyListener: TListener = client => client.on("warn", warn => {
+const readyListener: Listener = client => client.on("warn", warn => {
   log("A warning has occurred!", warn);
 });
 

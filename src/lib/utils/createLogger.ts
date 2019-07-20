@@ -1,15 +1,15 @@
+import { types } from "util";
 import chalk from "chalk";
 import debug from "debug";
 import cleanStack = require("clean-stack");
-import { isError } from "util";
 
 export const kFormat = Symbol.for("logger.Format");
 
-export interface ILogger {
-  child(loggerName: string): ILogger;
+export interface Logger {
+  child(loggerName: string): Logger;
   error(...errorData: Array<Error & any>): void;
   [kFormat](isErrorMsg: boolean, ...data: any[]): string;
-  (...data: any[]): ILogger;
+  (...data: any[]): Logger;
 }
 
 const [colStart, colEnd] = chalk.red("_").split("_");
@@ -22,13 +22,13 @@ function colouriseName(name: string): string {
   return `${useCol ? colourCode : ""}${name}${useCol ? "\u001B[0m" : ""}`;
 }
 
-function createLogger(name: string): ILogger;
-function createLogger(loggerName: string): ILogger {
+function createLogger(name: string): Logger;
+function createLogger(loggerName: string): Logger {
   function formatMessage(name: string, isErrorMsg: boolean, ...data: any[]): string {
     if (isErrorMsg)
       data = data
         .map((arg, ind) => {
-          const res = isError(arg) ? cleanStack(arg.stack as string, { pretty: true }) : arg;
+          const res = types.isNativeError(arg) || arg instanceof Error ? cleanStack(arg.stack as string, { pretty: true }) : arg;
           return ind === 0 ? res : `\n${res}`;
         });
 
@@ -43,7 +43,7 @@ function createLogger(loggerName: string): ILogger {
         line = `${iColStart}${line.trimEnd()}${iColEnd}`;
         return ind === 0 ? line : `\n  ${name} ${line}`;
       })
-      .filter(val => val !== "\n" ? val : void 0);
+      .filter(val => val === "\n" ? void 0 : val);
 
     return `  ${name} ${data.join(" ")}`;
   }
@@ -63,10 +63,10 @@ function createLogger(loggerName: string): ILogger {
   }
 
   // Avoid calling the create logger function again because of the speed benefits.
-  function createChild(name: string, childName?: string): ILogger {
+  function createChild(name: string, childName?: string): Logger {
     if (childName) name = `${name}:${childName}`;
     name = colouriseName(name);
-    const loggerInst = logger.bind(null, name) as ILogger;
+    const loggerInst = logger.bind(null, name) as Logger;
     loggerInst.error = logError.bind(null, name);
     loggerInst.child = createChild.bind(null, name);
     loggerInst[kFormat] = formatMessage.bind(null, name);

@@ -1,8 +1,8 @@
-import { TListener } from "../loaders/loadEvents";
+import { Listener } from "../loaders/loadEvents";
 import { Util, createLogger } from "../lib";
 
 const log = createLogger("events:ready");
-const readyListener: TListener = client => client.on("ready", () => {
+const readyListener: Listener = client => client.on("ready", () => {
   const botInfo = Util.formatObj({
     tag: client.user.tag,
     guildCount: client.guilds.size,

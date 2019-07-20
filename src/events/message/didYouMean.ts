@@ -1,7 +1,7 @@
 import didYouMeanChecker from "didyoumean2";
-import { TCommandMid } from "../../lib";
+import { CommandMid } from "../../lib";
 
-const didYouMean: TCommandMid = ({ didYouMean = null, msg, client }, next) => {
+const didYouMean: CommandMid = ({ didYouMean = null, msg, client }, next) => {
   if (!didYouMean) return next();
   let potentialCmd = didYouMeanChecker(didYouMean as string, client.commands.keys());
   if (!potentialCmd) return next();

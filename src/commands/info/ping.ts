@@ -1,11 +1,11 @@
-import { ICommand } from "../../lib";
+import { Command } from "../../lib";
 
-const ping: ICommand = {
+const ping: Command = {
   name: "ping",
   aliases: ["p"],
   run({ msg, client, timer }) {
     const execTime = timer.lap(2);
-    const pingTime = parseFloat(client.ws.ping / 8 + execTime);
+    const pingTime = (client.ws.ping / 8) + parseFloat(execTime);
     msg.channel.send(`:ping_pong: The ping latency is **≈${pingTime.toFixed(2)}ms**.\n:stopwatch: The execution time was **≈${execTime}ms**.`);
   },
 };

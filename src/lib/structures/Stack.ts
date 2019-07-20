@@ -1,11 +1,12 @@
 import compose = require("koa-compose");
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Context } from ".";
 
-type TNextFn = () => Promise<any>;
-export type TMiddleware<CI> = compose.Middleware<CI>;
+type NextFn = () => Promise<any>;
+export type Middleware<CI> = compose.Middleware<CI>;
 
-interface IMiddlewareFn<C, CI> extends TMiddleware<C> {
-  fn: TMiddleware<CI>;
+interface MiddlewareFn<C, CI> extends Middleware<C> {
+  fn: Middleware<CI>;
 }
 
 type $TSFIXAnyCtx = new (...args: any) => any;
@@ -16,22 +17,22 @@ type $TSFIXAnyCtx = new (...args: any) => any;
  */
 class Stack<C extends (typeof Context) | $TSFIXAnyCtx, CI = InstanceType<C>> {
   private composed = false;
-  private middleware: Array<IMiddlewareFn<C, CI>> = [];
+  private middleware: Array<MiddlewareFn<C, CI>> = [];
   private composedMiddleware!: compose.ComposedMiddleware<C>;
 
-  public use(fn: TMiddleware<CI>): Stack<C, CI> {
-    const mdFn: any = async (ctx: CI, next: TNextFn) => {
+  public use(fn: Middleware<CI>): Stack<C, CI> {
+    const mdFn: any = async (ctx: CI, next: NextFn) => {
       await mdFn.fn(ctx, next);
     };
 
     // Assign it instead of directly using it so that it can be disused later.
     mdFn.fn = fn;
 
-    this.middleware.push(mdFn as IMiddlewareFn<C, CI>);
+    this.middleware.push(mdFn as MiddlewareFn<C, CI>);
     return this;
   }
 
-  public disuse(fn: TMiddleware<C>): Stack<C, CI> {
+  public disuse(fn: Middleware<C>): Stack<C, CI> {
     this.middleware = this.middleware.filter(mdFn => mdFn.fn.toString() !== fn.toString());
     this.compose();
     return this;
@@ -42,7 +43,7 @@ class Stack<C extends (typeof Context) | $TSFIXAnyCtx, CI = InstanceType<C>> {
     return this.composedMiddleware as unknown as compose.ComposedMiddleware<CI>;
   }
 
-  public compose() {
+  public compose(): void {
     this.composedMiddleware = compose<C>(this.middleware);
     this.composed = true;
   }
