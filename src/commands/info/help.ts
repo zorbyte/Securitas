@@ -4,6 +4,7 @@ import { Command } from "../../lib";
 
 const help: Command = {
   name: "help",
+  permission: 0,
   aliases: ["h", "cmds"],
   args: [{
     name: "command",

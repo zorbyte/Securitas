@@ -2,5 +2,18 @@
   "typescript.tsdk": "node_modules/typescript/lib",
   "editor.formatOnPaste": true,
   "editor.formatOnSave": true,
-  "editor.formatOnType": true
+  "editor.formatOnType": true,
+  "auto-close-tag.enableAutoCloseTag": false,
+  "editor.formatOnSaveTimeout": 1000,
+  "xo.enable": true,
+  "xo.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+  "xo.format.enable": true,
+  "cSpell.words": [
+    "securitas"
+  ],
 }

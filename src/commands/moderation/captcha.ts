@@ -5,6 +5,7 @@ import { Command } from "../../lib";
 
 const captchaCmd: Command = {
   name: "captcha",
+  permission: 1,
   aliases: ["c"],
   run({ msg }) {
     const captcha = captchaGen.create();

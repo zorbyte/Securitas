@@ -3,6 +3,7 @@ import { Command } from "../../lib";
 const ping: Command = {
   name: "ping",
   aliases: ["p"],
+  permission: 0,
   run({ msg, client, timer }) {
     const execTime = timer.lap(2);
     const pingTime = (client.ws.ping / 8) + parseFloat(execTime);

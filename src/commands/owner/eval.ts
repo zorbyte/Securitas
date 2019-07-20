@@ -8,6 +8,7 @@ const clean = (text: string): string => {
 
 const evalCmd: Command = {
   name: "eval",
+  permission: 4,
   aliases: ["ev"],
   args: [{
     name: "...code",

@@ -2,6 +2,9 @@
   "prefix": "s!",
   "spamThreshold": 4,
   "redisUri": "redis://localhost:6379",
-  "dbName": "securitas",
+  "host": "localhost",
+  "port": 28015,
+  "db": "securitas",
+  "database": "securitas",
   "ownerID": "451285730648653834"
 }

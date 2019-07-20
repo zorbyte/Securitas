@@ -1,6 +1,4 @@
-import { Column, Model } from "pims";
-
-export enum EPermisions {
+export enum EPermissions {
   User,
   Moderator,
   Administrator,
@@ -8,16 +6,8 @@ export enum EPermisions {
   BotOwner,
 }
 
-@Model({ database: "securitas", table: "users" })
-class User {
-  @Column({ primary: true })
-  public id!: string;
-
-  @Column({ secondary: true })
-  public email!: boolean;
-
-  @Column()
-  public perm?: EPermisions;
+export default interface User {
+  id: string;
+  email: boolean;
+  perm?: EPermissions;
 }
-
-export default User;

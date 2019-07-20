@@ -50,6 +50,7 @@ function createLogger(loggerName: string): Logger {
 
   function logMessage(name: string, isErrorMsg: boolean, ...data: any[]): void {
     const logData = formatMessage(name, isErrorMsg, ...data);
+    // eslint-disable-next-line no-console
     console[isErrorMsg ? "error" : "debug"](logData);
   }
 

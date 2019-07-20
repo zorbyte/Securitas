@@ -1,12 +1,7 @@
 import { config } from "dotenv";
-import BluePromise = require("bluebird");
 import { Client } from "./lib";
 
 config();
-
-BluePromise.config({
-  longStackTraces: false,
-});
 
 const client = new Client({
   disableEveryone: true,

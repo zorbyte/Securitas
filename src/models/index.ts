@@ -1,5 +1,2 @@
-import Guild from "./Guild";
-import User from "./User";
-
-export { Guild, User };
-export default [Guild, User];
+export { default as Guild } from "./Guild";
+export { default as User } from "./User";
