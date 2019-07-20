@@ -1,5 +1,4 @@
 import { MessageEmbed } from "discord.js";
-
 import { Command } from "../../lib";
 
 const help: Command = {
@@ -49,7 +48,7 @@ const help: Command = {
           })
           .join(" ");
 
-        embed.addField(name, `${config.prefix}${name}${helpArgs}`, false);
+        embed.addField(name, `${ctx.prefix}${name}${helpArgs}`, false);
       }
     }
 

@@ -1,11 +1,13 @@
 import { MicroframeworkSettings } from "microframework-w3tec";
 import Keyv = require("keyv");
-
-import config = require("../../configs/config.json");
-import { createLogger, Stopwatch } from "../lib";
+import { Stopwatch } from "../lib";
 import { SpamInfo } from "../events/message";
+import { loaderLog } from "./";
+import config = require("../../configs/config.json");
 
-const log = createLogger("loader:cache");
+console.log(loaderLog)
+
+const log = loaderLog.child("cache");
 function connectSpamCache(settings: MicroframeworkSettings): Promise<void> {
   return new Promise((resolve, reject) => {
     log("Connecting to redis...");

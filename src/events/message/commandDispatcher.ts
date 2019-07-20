@@ -40,8 +40,11 @@ const commandDispatcher: CommandMid = async (ctx, next): Promise<void> => {
   const builtArgs: CmdArgs = {};
   if (command.args && args.length) {
     // eslint-ignore-next-line guard-for-in
-    const cmdArgs = command.args;
-    for (const arg of cmdArgs) builtArgs[arg.name] = arg;
+    let i = 0;
+    for (const arg of command.args) {
+      builtArgs[arg.name] = args[i];
+      i++;
+    }
   }
 
   // Set the built args to the context.

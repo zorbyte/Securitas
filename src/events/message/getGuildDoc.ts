@@ -1,24 +1,16 @@
-import { r } from "rethinkdb-ts";
-import { CommandMid } from "../../lib";
-import { Guild } from "../../models";
+import { CommandMid, Driver } from "../../lib";
 
 const getGuildDoc: CommandMid = async (ctx, next) => {
   const { msg, config } = ctx;
-  ctx.prefix = config.prefix;
   if (!msg.guild) return next();
-  let guild = await r.table<Guild>("guilds").get(msg.guild.id).run();
+  const guild = await Driver.fetchGuild(msg.guild.id, {
+    prefix: config.prefix,
+    antiSpam: false,
+    id: msg.guild.id,
+  });
 
-  if (guild)
-    ctx.prefix = guild.prefix;
-  else {
-    guild = {
-      prefix: config.prefix,
-      antiSpam: false,
-      id: msg.guild.id,
-    };
+  ctx.prefix = guild.prefix || config.prefix;
 
-    await r.table<Guild>("guilds").insert(guild).run();
-  }
   ctx.guild = guild;
   next();
 };

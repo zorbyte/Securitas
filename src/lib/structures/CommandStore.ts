@@ -8,7 +8,7 @@ export interface CommandArgument {
   description?: string;
 }
 
-export type CmdArgs = Record<string, any> | string[];
+export type CmdArgs = Record<string, any>;
 
 export type CommandMid = Middleware<CommandContext>;
 

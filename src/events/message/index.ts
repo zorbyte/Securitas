@@ -25,12 +25,13 @@ const readyListener: Listener = client => {
 
   return client.on("message", (msg: CmdMessage) => {
     setImmediate(async () => {
+      const logChild = log.child(msg.id);
       try {
-        const ctx = new CommandContext(client, msg, config, log.child(msg.id));
+        const ctx = new CommandContext(client, msg, config, logChild);
 
         await client.messageStack.handler(ctx);
       } catch (error) {
-        log.error(error);
+        logChild.error(error);
       }
     });
   });

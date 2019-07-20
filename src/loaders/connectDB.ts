@@ -1,9 +1,10 @@
 import { r } from "rethinkdb-ts";
 import { MicroframeworkSettings } from "microframework-w3tec";
-import { createLogger, Stopwatch, seedDatabase } from "../lib";
+import { Stopwatch, seedDatabase } from "../lib";
+import { loaderLog } from ".";
 import config = require("../../configs/config.json");
 
-const log = createLogger("loader:database");
+const log = loaderLog.child("database");
 async function connectDB(settings: MicroframeworkSettings): Promise<void> {
   try {
     log("Connecting to RethinkDB...");

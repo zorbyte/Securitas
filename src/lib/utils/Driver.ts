@@ -8,13 +8,13 @@ class Driver {
   }
 
   public static get guildTable(): RTable<Guild> {
-    return r.table<Guild>("guild");
+    return r.table<Guild>("guilds");
   }
 
   public static async fetchGuild(id: string): Promise<Guild | undefined>;
   public static async fetchGuild(id: string, createData?: Guild): Promise<Guild>;
   public static async fetchGuild(id: string, createData?: Guild): Promise<Guild | undefined> {
-    let guild: Guild = await Driver.guildTable.get(id).run();
+    let guild = await Driver.guildTable.get(id).run();
     if (!guild && createData) {
       await Driver.guildTable.insert(createData).run();
       guild = createData;
@@ -33,6 +33,16 @@ class Driver {
     return user;
   }
 
+  public static async updateGuild(id: string, createData?: Partial<Guild>): Promise<Guild | Partial<Guild>> {
+    createData = { id, ...createData };
+    const { changes } =  await Driver.guildTable.insert(createData, {
+      conflict: "update",
+      returnChanges: true,
+    }).run();
+    if (!changes || !changes.length || !changes[0]) return createData;
+    return (changes[0].new_val || changes[0].old_val) as Guild;
+  }
+
   public static async addUserGuild(userId: string, guildId: string, permission: Permissions): Promise<User> {
     let user = await Driver.fetchUser(userId, {
       id: userId,
@@ -46,7 +56,7 @@ class Driver {
       conflict: "update",
       returnChanges: true,
     }).run();
-    if (changes && changes[0].new_val) user = changes[0].new_val;
+    if (changes && changes[0].new_val) user = changes[0].new_val || changes[0].old_val;
     return user;
   }
 }
