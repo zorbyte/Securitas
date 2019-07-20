@@ -7,7 +7,7 @@ export const kFormat = Symbol.for("logger.Format");
 
 export interface ILogger {
   child(loggerName: string): ILogger;
-  error(...errorData: (Error & any)[]): void;
+  error(...errorData: Array<Error & any>): void;
   [kFormat](isErrorMsg: boolean, ...data: any[]): string;
   (...data: any[]): ILogger;
 }
@@ -17,7 +17,7 @@ const [colStart, colEnd] = chalk.red("_").split("_");
 function colouriseName(name: string): string {
   // @ts-ignore Setup colours, this is a hidden debug API.
   const colourNum = debug.selectColor(name);
-  const colourCode = `\u001B[3${(colourNum < 8 ? colourNum : "8;5;" + colourNum)};1m`;
+  const colourCode = `\u001B[3${(colourNum < 8 ? colourNum : `8;5;${colourNum}`)};1m`;
   const useCol = chalk.supportsColor;
   return `${useCol ? colourCode : ""}${name}${useCol ? "\u001B[0m" : ""}`;
 }
@@ -25,14 +25,13 @@ function colouriseName(name: string): string {
 function createLogger(name: string): ILogger;
 function createLogger(loggerName: string): ILogger {
   function formatMessage(name: string, isErrorMsg: boolean, ...data: any[]): string {
-    if (isErrorMsg) {
+    if (isErrorMsg)
       data = data
         .map((arg, ind) => {
-          let res = isError(arg) ? cleanStack(arg.stack as string, { pretty: true, }) : arg;
+          const res = isError(arg) ? cleanStack(arg.stack as string, { pretty: true }) : arg;
           return ind === 0 ? res : `\n${res}`;
         });
-    }
-    
+
     // Colours.
     const iColStart = isErrorMsg ? colStart : "";
     const iColEnd = isErrorMsg ? colEnd : "";
@@ -49,13 +48,13 @@ function createLogger(loggerName: string): ILogger {
     return `  ${name} ${data.join(" ")}`;
   }
 
-  function logMessage (name: string, isErrorMsg: boolean, ...data: any[]): void {
-    let logData = formatMessage(name, isErrorMsg, ...data);
+  function logMessage(name: string, isErrorMsg: boolean, ...data: any[]): void {
+    const logData = formatMessage(name, isErrorMsg, ...data);
     console[isErrorMsg ? "error" : "debug"](logData);
   }
 
   function logError(name: string, ...data: any[]): void {
-    logMessage(name, true, ...data)
+    logMessage(name, true, ...data);
   }
 
   function logger(name: string, ...data: any[]): void {

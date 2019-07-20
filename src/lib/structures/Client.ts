@@ -10,6 +10,7 @@ import { RethinkAdapter } from "pims-rethinkdb";
 import ow from "ow";
 
 import loaders from "../../loaders";
+import { CommandContext, ISpamInfo } from "../../events/message";
 import {
   TCommandMid,
   CommandStore,
@@ -17,7 +18,6 @@ import {
   Stopwatch,
   createLogger,
 } from "..";
-import { CommandContext, ISpamInfo } from "../../events/message"
 
 class SecuritasClient extends Client {
   public commands = new CommandStore();
@@ -51,8 +51,8 @@ class SecuritasClient extends Client {
       this.adapter = this.micro.settings.getData("adapter");
       this.commands = this.micro.settings.getData("commands") || {};
       return bootTimer;
-    } catch (err) {
-      this.log.error("An error occurred while bootstrapping.", err);
+    } catch (error) {
+      this.log.error("An error occurred while bootstrapping.", error);
       process.exit(1);
     }
   }
@@ -60,7 +60,7 @@ class SecuritasClient extends Client {
   public use(fn: TCommandMid): SecuritasClient {
     ow(fn, ow.function);
     this.messageStack.use(fn);
-    if (!!this.readyAt) this.messageStack.compose();
+    if (this.readyAt) this.messageStack.compose();
     return this;
   }
 
@@ -78,11 +78,11 @@ class SecuritasClient extends Client {
       const tokenPartial = token ? token.substr(0, 13) : "";
       this.log(`Logging in with ${token ? `token ${tokenPartial}${"*".repeat(token.length - ~~(tokenPartial.length * 2.75))}` : "an unknown token"}.`);
       let loginResp = await super.login(token)
-        .catch(err => {
-          this.log.error(`Failed to log into Discord.`, err);
+        .catch(error => {
+          this.log.error(`Failed to log into Discord.`, error);
           process.exit(1);
         });
-      
+
       loginResp = loginResp as string;
 
       // Timers.
@@ -90,17 +90,16 @@ class SecuritasClient extends Client {
       const loginTime = parseFloat(totalTime) - parseFloat(bootstrapTime);
       this.log(`Successfully logged in with a total boot time of ${totalTime}ms and login time of ${loginTime}ms.`);
       return loginResp;
-    } catch (err) {
-      throw err;
+    } catch (error) {
+      throw error;
     }
   }
 
   public async destroy() {
-    if (this.micro) {
+    if (this.micro)
       await this.micro.shutdown();
-    } else {
+    else
       super.destroy();
-    }
   }
 }
 

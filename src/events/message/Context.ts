@@ -1,8 +1,8 @@
+import { Guild } from "../../models";
 import { Context, Client, ILogger, TCmdArgs } from "../../lib";
 import { IMessage } from ".";
-import { Guild } from "../../models";
 
-export class CommandContext extends Context {
+class CommandContext extends Context {
   public rawArgs!: string[];
   public prefix!: string;
   public guild?: Guild;

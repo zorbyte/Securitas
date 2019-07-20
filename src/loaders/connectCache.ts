@@ -28,9 +28,9 @@ function connectSpamCache(settings: MicroframeworkSettings): Promise<void> {
     });
 
     settings.setData("cache", redisCache);
-    
+
     ok();
   });
-};
+}
 
 export default connectSpamCache;

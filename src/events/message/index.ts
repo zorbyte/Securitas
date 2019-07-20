@@ -9,7 +9,7 @@ import CommandContext from "./Context";
 import antiSpam, { ISpamInfo } from "./antiSpam";
 import commandDispatcher from "./commandDispatcher";
 import didYouMean from "./didYouMean";
-import getGuildDoc from "./getGuildDoc.js";
+import getGuildDoc from "./getGuildDoc";
 
 export interface IMessage extends Message {
   author: User;
@@ -22,15 +22,15 @@ const readyListener: TListener = client => {
     .use(antiSpam)
     .use(commandDispatcher)
     .use(didYouMean);
-  
+
   return client.on("message", (msg: IMessage) => {
     setImmediate(async () => {
       try {
         const ctx = new CommandContext(client, msg, config, log.child(msg.id));
 
         await client.messageStack.handler(ctx);
-      } catch (err) {
-        log.error(err);
+      } catch (error) {
+        log.error(error);
       }
     });
   });

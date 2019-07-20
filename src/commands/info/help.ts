@@ -38,7 +38,7 @@ const help: ICommand = {
         .setDescription("**Arguments key:**")
         .addField("Optional", "[]")
         .addField("Required", "<>");
-    
+
       for (const [name, cmdEntry] of client.commands) {
         let helpArgs = "";
         if (cmdEntry.args) helpArgs += cmdEntry.args

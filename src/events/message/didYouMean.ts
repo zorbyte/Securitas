@@ -1,5 +1,5 @@
-import { TCommandMid } from "../../lib";
 import didYouMeanChecker from "didyoumean2";
+import { TCommandMid } from "../../lib";
 
 const didYouMean: TCommandMid = ({ didYouMean = null, msg, client }, next) => {
   if (!didYouMean) return next();

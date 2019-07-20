@@ -8,17 +8,15 @@ const getGuildDoc: TCommandMid = async (ctx, next) => {
   let guild = await client
     .adapter
     .getOne(Guild, msg.guild.id);
-  if (guild) {
-    console.log(guild)
+  if (guild)
     ctx.prefix = guild.prefix;
-  } else {
+  else {
     guild = new Guild();
     guild.prefix = config.prefix;
     guild.antiSpam = false;
     guild.id = msg.guild.id;
-    client.adapter.get
     await client.adapter.save(guild);
-  };
+  }
   ctx.guild = guild;
   next();
 };

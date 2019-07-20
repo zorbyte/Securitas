@@ -12,7 +12,7 @@ const commandDispatcher: TCommandMid = async (ctx, next) => {
   if (!prefixRegex.test(msg.content) || msg.author.bot) return next();
 
   // @ts-ignore I have no idea what is wrong here.
-	const [_, matchedPrefix] = msg.content.match(prefixRegex);
+  const [_, matchedPrefix] = msg.content.match(prefixRegex);
 
   // Separate the content.
   let [cmd, ...args] = msg.content.slice(matchedPrefix.length)
@@ -24,21 +24,20 @@ const commandDispatcher: TCommandMid = async (ctx, next) => {
   if (!cmd) return next();
 
   // Get the command.
-  const command = commands.get(cmd)
+  const command = commands.get(cmd);
 
   // If there is no command that matches in the object.
   if (!command) {
     ctx.didYouMean = cmd;
-    return next()
+    return next();
   }
 
   // Build the arguments by matching them with the command info.
-  let builtArgs: TCmdArgs = {};
+  const builtArgs: TCmdArgs = {};
   if (command.args && args.length) {
     const cmdArgs: any[] = command.args;
-    for (const arg in cmdArgs) {
+    for (const arg in cmdArgs)
       builtArgs[cmdArgs[arg].name] = args[arg];
-    }
   }
 
   // Set the built args to the context.
@@ -55,8 +54,8 @@ const commandDispatcher: TCommandMid = async (ctx, next) => {
   try {
     const cmdRan = command.run(ctx, next);
     if (cmdRan && typeof cmdRan.then === "function") await cmdRan;
-  } catch (err) {
-    ctx.log.error(`Command ${command.name} failed to run.`, err)
+  } catch (error) {
+    ctx.log.error(`Command ${command.name} failed to run.`, error);
   } finally {
     ctx.log(`Successfully ran command ${command.name} in ${ctx.timer.stop(2)}ms.`);
   }

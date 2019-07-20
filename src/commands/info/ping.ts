@@ -8,6 +8,6 @@ const ping: ICommand = {
     const pingTime = parseFloat(client.ws.ping / 8 + execTime);
     msg.channel.send(`:ping_pong: The ping latency is **≈${pingTime.toFixed(2)}ms**.\n:stopwatch: The execution time was **≈${execTime}ms**.`);
   },
-}
+};
 
 export default ping;

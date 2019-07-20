@@ -1,5 +1,4 @@
-import { Column, Model, HasAndBelongsToMany } from "pims";
-import Guild from "./Guild";
+import { Column, Model } from "pims";
 
 export enum EPermisions {
   User,
@@ -13,7 +12,7 @@ export enum EPermisions {
 class User {
   @Column({ primary: true })
   public id!: string;
-  
+
   @Column({ secondary: true })
   public email!: boolean;
 

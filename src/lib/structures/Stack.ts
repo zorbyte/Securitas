@@ -1,5 +1,5 @@
 import compose = require("koa-compose");
-import { Context } from "./";
+import { Context } from ".";
 
 type TNextFn = () => Promise<any>;
 export type TMiddleware<CI> = compose.Middleware<CI>;
@@ -8,21 +8,19 @@ interface IMiddlewareFn<C, CI> extends TMiddleware<C> {
   fn: TMiddleware<CI>;
 }
 
-interface $TSFIX_IAnyCtx {
-  new (...args: any): any
-}
+type $TSFIXAnyCtx = new (...args: any) => any;
 
 /**
  * @type C The constructor type of the context
  * @type CI The instance of C.
  */
-class Stack<C extends (typeof Context) | $TSFIX_IAnyCtx, CI = InstanceType<C>> {
+class Stack<C extends (typeof Context) | $TSFIXAnyCtx, CI = InstanceType<C>> {
   private composed = false;
-  private middleware: IMiddlewareFn<C, CI>[] = [];
+  private middleware: Array<IMiddlewareFn<C, CI>> = [];
   private composedMiddleware!: compose.ComposedMiddleware<C>;
 
   public use(fn: TMiddleware<CI>): Stack<C, CI> {
-    let mdFn: any = async (ctx: CI, next: TNextFn) => {
+    const mdFn: any = async (ctx: CI, next: TNextFn) => {
       await mdFn.fn(ctx, next);
     };
 

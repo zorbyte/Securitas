@@ -1,5 +1,4 @@
-import { Column, Model, HasAndBelongsToMany } from "pims";
-import { User } from ".";
+import { Column, Model } from "pims";
 
 @Model({ database: "securitas", table: "guilds" })
 class Guild {
@@ -8,7 +7,7 @@ class Guild {
 
   @Column()
   public prefix!: string;
-  
+
   @Column()
   public antiSpam!: boolean;
 }

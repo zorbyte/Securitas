@@ -1,9 +1,8 @@
 import { config } from "dotenv";
-config();
-
 import BluePromise = require("bluebird");
-
 import { Client } from "./lib";
+
+config();
 
 BluePromise.config({
   longStackTraces: false,
@@ -16,7 +15,7 @@ const client = new Client({
 
 try {
   client.login();
-} catch (err) {
-  client.log.error(`Failed to bootstrap and log into Discord.`, err);
+} catch (error) {
+  client.log.error(`Failed to bootstrap and log into Discord.`, error);
 }
 

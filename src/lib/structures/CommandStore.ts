@@ -1,5 +1,5 @@
-import { TMiddleware } from "..";
 import { CommandContext } from "../../events/message";
+import { TMiddleware } from "..";
 
 export interface ICommandArgument {
   name: string;
@@ -40,15 +40,15 @@ class CommandStore {
   public set(command: ICommand): void {
     const { name } = command;
     if (name in this.items) throw new Error("Command already exists!");
-    if (command.aliases) {
+    if (command.aliases)
       command.aliases.forEach((alias: string) => {
         this.items[alias] = command.name;
       });
-    }
+
     this.items[name] = command;
   }
 
-  public *[Symbol.iterator](): IterableIterator<[string, ICommand]> {
+  public*[Symbol.iterator](): IterableIterator<[string, ICommand]> {
     for (const [commandName, command] of Object.entries(this.items)) {
       if (typeof command === "string") continue;
       yield [commandName, command];

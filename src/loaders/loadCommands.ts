@@ -1,14 +1,13 @@
-import { MicroframeworkSettings } from "microframework-w3tec";
 import { relative, sep } from "path";
+import { MicroframeworkSettings } from "microframework-w3tec";
 
-import { IRegisteredCommand, ICommand, Client } from "../lib";
-import { Util } from "../lib";
+import { IRegisteredCommand, ICommand, Client, Util } from "../lib";
 
 async function loadCommands(settings: MicroframeworkSettings): Promise<void> {
-  let { commands } = settings.getData("client") as Client;
+  const { commands } = settings.getData("client") as Client;
   await Util.scanDir<ICommand>("commands", (_command, path, scanPath) => {
-    let relPaths = relative(scanPath, path).split(sep);
-    let command = _command as IRegisteredCommand;
+    const relPaths = relative(scanPath, path).split(sep);
+    const command = _command as IRegisteredCommand;
     command.category = relPaths[0];
     commands.set(command);
     return command.name;

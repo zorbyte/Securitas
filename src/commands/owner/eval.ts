@@ -1,11 +1,10 @@
 import { ICommand } from "../../lib";
 
 const clean = (text: string) => {
-  if (typeof(text) === "string")
-    return text.replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
-  else
-      return text;
-}
+  if (typeof (text) === "string")
+    return text.replace(/`/g, `\`${String.fromCharCode(8203)}`).replace(/@/g, `@${String.fromCharCode(8203)}`);
+  return text;
+};
 
 const evalCmd: ICommand = {
   name: "eval",
@@ -20,14 +19,14 @@ const evalCmd: ICommand = {
       if (msg.author.id !== config.ownerID) return;
       const code = rawArgs.join(" ");
       let evaled = eval(code);
- 
+
       if (typeof evaled !== "string") evaled = require("util").inspect(evaled);
- 
-      msg.channel.send(clean(evaled), { code:"xl" });
-    } catch (err) {
-      msg.channel.send(`\`ERROR\` \`\`\`xl\n${clean(err)}\n\`\`\``);
+
+      msg.channel.send(clean(evaled), { code: "xl" });
+    } catch (error) {
+      msg.channel.send(`\`ERROR\` \`\`\`xl\n${clean(error)}\n\`\`\``);
     }
   },
-}
+};
 
 export default evalCmd;

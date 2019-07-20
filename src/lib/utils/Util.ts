@@ -1,7 +1,7 @@
-import { scan } from "fs-nextra";
-import chalk from "chalk";
 import { inspect } from "util";
 import { join, extname } from "path";
+import { scan } from "fs-nextra";
+import chalk from "chalk";
 
 import { createLogger, ILogger, Stopwatch } from "..";
 
@@ -44,15 +44,14 @@ class Util {
         const { default: component }: { default: T } = await import(filePath);
 
         const componentName = await loadFunc(component, filePath, scanPath, log);
-        if (componentName) {
+        if (componentName)
           log(`Loaded ${displayTypeName} ${componentName}.`);
-        }
 
         // Don't reserve unnecessary memory.
         module.children.pop();
         delete require.cache[filePath];
       }));
-    
+
     log(`Finished loading ${componentType} in ${timer.stop(2)}ms.`);
   }
 }

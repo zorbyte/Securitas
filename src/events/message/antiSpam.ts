@@ -11,14 +11,13 @@ const antiSpam: TCommandMid = async ({ msg, guild, client: { user, redisCache },
   if (msg.author.id === user.id || (guild && !guild.antiSpam)) return next();
   const accessor = `spam:${msg.author.id}`;
   let lastMsg = await redisCache.get(accessor);
-  if (!lastMsg) {
+  if (!lastMsg)
     lastMsg = {
       msgTime: 0,
       fastMsgAmnt: 0,
       content: `NOT_SPAM_${msg.content}`,
       channelID: "NOT_SPAM",
     };
-  }
 
   const threshold = config.spamThreshold;
   const isSpamMsg = (msg.createdTimestamp - lastMsg.msgTime <= 2000) && lastMsg.channelID === msg.channel.id;
