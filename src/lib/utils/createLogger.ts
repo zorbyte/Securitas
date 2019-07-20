@@ -65,11 +65,12 @@ function createLogger(loggerName: string): Logger {
 
   // Avoid calling the create logger function again because of the speed benefits.
   function createChild(name: string, childName?: string): Logger {
+    const oldName = name;
     if (childName) name = `${name}:${childName}`;
     name = colouriseName(name);
     const loggerInst = logger.bind(null, name) as Logger;
     loggerInst.error = logError.bind(null, name);
-    loggerInst.child = createChild.bind(null, name);
+    loggerInst.child = createChild.bind(null, oldName);
     loggerInst[kFormat] = formatMessage.bind(null, name);
     return loggerInst;
   }

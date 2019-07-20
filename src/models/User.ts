@@ -1,13 +1,8 @@
-export enum EPermissions {
-  User,
-  Moderator,
-  Administrator,
-  Owner,
-  BotOwner,
-}
+import { UserGuild } from ".";
 
 export default interface User {
   id: string;
-  email: boolean;
-  perm?: EPermissions;
+  email?: boolean;
+  guilds?: UserGuild[];
+  isMaintainer?: boolean;
 }

@@ -1,3 +1,5 @@
+/* eslint-disable unicorn/no-process-exit */
+
 import { config } from "dotenv";
 import { Client } from "./lib";
 
@@ -9,8 +11,11 @@ const client = new Client({
 });
 
 try {
-  client.login();
+  client.login().catch(error => {
+    client.log.error(`Failed to bootstrap and log into Discord.`, error);
+    process.exit(1);
+  });
 } catch (error) {
-  client.log.error(`Failed to bootstrap and log into Discord.`, error);
+  client.log.error(`An unknown error occurred.`, error);
+  process.exit(1);
 }
-

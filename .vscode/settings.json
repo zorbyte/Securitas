@@ -5,7 +5,7 @@
   "editor.formatOnType": true,
   "auto-close-tag.enableAutoCloseTag": false,
   "editor.formatOnSaveTimeout": 1000,
-  "xo.enable": true,
+  "xo.enable": false,
   "xo.validate": [
     "javascript",
     "javascriptreact",

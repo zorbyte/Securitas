@@ -12,19 +12,19 @@ export type CmdArgs = Record<string, any> | string[];
 
 export type CommandMid = Middleware<CommandContext>;
 
-export enum EPermisions {
+export enum Permissions {
   USER,
   MOD,
   ADMIN,
   OWNER,
   MAINTAINER,
- }
+}
 
 export interface Command {
   name: string;
   aliases?: string[];
   args?: CommandArgument[];
-  permission: EPermisions;
+  permission: Permissions;
   run: CommandMid;
 }
 

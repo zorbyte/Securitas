@@ -2,8 +2,13 @@ import { inspect } from "util";
 import { join, extname } from "path";
 import { scan } from "fs-nextra";
 import chalk from "chalk";
-
-import { createLogger, Logger, Stopwatch } from "..";
+import {
+  createLogger,
+  Logger,
+  Driver,
+  Stopwatch,
+  Permissions,
+} from "..";
 
 /**
  * @returns [string] The name of the item.
@@ -11,6 +16,19 @@ import { createLogger, Logger, Stopwatch } from "..";
 type LoadFunc<T> = (item: T, path: string, scanPath: string, log: Logger) => Promise<string | undefined> | string | undefined;
 
 class Util {
+  public static async getUserPerm(userId: string, guildId?: string): Promise<Permissions> {
+    const user = await Driver.fetchUser(userId);
+    if (!user) return 0;
+    if (user.isMaintainer) return 4;
+    if (!guildId) return 0;
+    if (user.guilds) {
+      const userGuild = user.guilds.find(g => g.id === guildId);
+      if (!userGuild) return 0;
+      return userGuild.perm || 0;
+    }
+    return 0;
+  }
+
   public static formatObj(obj: Record<string, string | number>): string {
     let builtString = "\n";
     for (const [key, value] of Object.entries(obj)) builtString += `\t${key}=${chalk.green(

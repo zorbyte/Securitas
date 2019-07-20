@@ -7,4 +7,5 @@ export {
   CommandMid,
   Command,
   RegisteredCommand,
+  Permissions,
 } from "./CommandStore";

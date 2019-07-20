@@ -33,6 +33,9 @@ const commandDispatcher: CommandMid = async (ctx, next): Promise<void> => {
     return next();
   }
 
+  // Stop unauthorised users.
+  if (command.permission > 0 && await Util.getUserPerm(msg.author.id) < command.permission) return next();
+
   // Build the arguments by matching them with the command info.
   const builtArgs: CmdArgs = {};
   if (command.args && args.length) {
