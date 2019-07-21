@@ -7,7 +7,7 @@ export interface SpamInfo {
   channelID: string;
 }
 
-const antiSpam: CommandMid = async ({ msg, guild, client: { user, redisCache }, config }, next) => {
+const antiSpam: CommandMid = async ({ msg, guild, client: { user, redisCache }, config, log }, next) => {
   if (msg.author.id === user.id || (guild && !guild.antiSpam)) return next();
   const accessor = `spam:${msg.author.id}`;
   let lastMsg = await redisCache.get(accessor);
@@ -21,7 +21,7 @@ const antiSpam: CommandMid = async ({ msg, guild, client: { user, redisCache }, 
 
   const threshold = config.spamThreshold;
   const isSpamMsg = (msg.createdTimestamp - lastMsg.msgTime <= 2000) && lastMsg.channelID === msg.channel.id;
-  let fastMsgAmnt = isSpamMsg ? lastMsg.fastMsgAmnt + 1 : 0;
+  let fastMsgAmnt = isSpamMsg ? lastMsg.fastMsgAmnt + 1 : 1;
   const isSpam = fastMsgAmnt >= threshold;
   if (isSpam) fastMsgAmnt = 0;
   redisCache.set(accessor, {
@@ -31,7 +31,10 @@ const antiSpam: CommandMid = async ({ msg, guild, client: { user, redisCache }, 
     channelID: msg.channel.id,
   }, 2000);
 
-  if (isSpam) return msg.channel.send("Spam!");
+  if (isSpam) {
+    log("Spam detected!");
+    return msg.channel.send("Spam!");
+  }
   next();
 };
 

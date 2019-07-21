@@ -9,13 +9,13 @@ interface MiddlewareFn<C, CI> extends Middleware<C> {
   fn: Middleware<CI>;
 }
 
-type $TSFIXAnyCtx = new (...args: any) => any;
+type $TSFIX = new (...args: any) => any;
 
 /**
  * @type C The constructor type of the context
  * @type CI The instance of C.
  */
-class Stack<C extends (typeof Context) | $TSFIXAnyCtx, CI = InstanceType<C>> {
+class Stack<C extends (typeof Context) | $TSFIX, CI = InstanceType<C>> {
   private composed = false;
   private middleware: Array<MiddlewareFn<C, CI>> = [];
   private composedMiddleware!: compose.ComposedMiddleware<C>;

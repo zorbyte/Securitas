@@ -33,13 +33,13 @@ class Driver {
     return user;
   }
 
-  public static async updateGuild(id: string, createData?: Partial<Guild>): Promise<Guild | Partial<Guild>> {
+  public static async updateGuild(id: string, createData?: Partial<Guild>): Promise<Guild | void> {
     createData = { id, ...createData };
     const { changes } =  await Driver.guildTable.insert(createData, {
       conflict: "update",
       returnChanges: true,
     }).run();
-    if (!changes || !changes.length || !changes[0]) return createData;
+    if (!changes || !changes.length || !changes[0]) return;
     return (changes[0].new_val || changes[0].old_val) as Guild;
   }
 

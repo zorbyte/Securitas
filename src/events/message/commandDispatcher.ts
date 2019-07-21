@@ -63,6 +63,8 @@ const commandDispatcher: CommandMid = async (ctx, next): Promise<void> => {
     if (cmdRan && typeof cmdRan.then === "function") await cmdRan;
   } catch (error) {
     ctx.log.error(`Command ${command.name} failed to run.`, error);
+    await msg.channel.send(`The command failed to run, this error has been reported.`)
+      .catch(ctx.log.error);
   } finally {
     ctx.log(`Successfully ran command ${command.name} in ${ctx.timer.stop(2)}ms.`);
   }

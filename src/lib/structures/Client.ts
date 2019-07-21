@@ -44,6 +44,10 @@ class SecuritasClient extends Client {
 
     this.redisCache = this.micro.settings.getData("cache");
     this.commands = this.micro.settings.getData("commands") || {};
+
+    // Setup redis error handler.
+    this.redisCache
+      .on("error", this.micro.settings.getData("cacheLog").error);
     return bootTimer;
   }
 

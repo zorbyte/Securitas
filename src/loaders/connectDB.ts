@@ -1,10 +1,9 @@
 import { r } from "rethinkdb-ts";
 import { MicroframeworkSettings } from "microframework-w3tec";
-import { Stopwatch, seedDatabase } from "../lib";
-import { loaderLog } from ".";
+import { Stopwatch, createLogger, seedDatabase } from "../lib";
 import config = require("../../configs/config.json");
 
-const log = loaderLog.child("database");
+const log = createLogger("database");
 async function connectDB(settings: MicroframeworkSettings): Promise<void> {
   try {
     log("Connecting to RethinkDB...");
@@ -27,8 +26,8 @@ async function connectDB(settings: MicroframeworkSettings): Promise<void> {
 
     log(`Successfully connected to RethinkDB in ${timer.stop(2)}ms.`);
   } catch (error) {
-    log.error("An error occurred while connecting to RethinkDB.");
-    throw error;
+    log.error("An error occurred while connecting to RethinkDB.", error);
+    process.exit(1);
   }
 }
 
