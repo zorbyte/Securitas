@@ -23,8 +23,8 @@ const readyListener: Listener = client => {
     .use(commandDispatcher)
     .use(didYouMean);
 
-  return client.on("message", (msg: CmdMessage) => {
-    setImmediate(async () => {
+  return client.on("message", async (msg: CmdMessage) => {
+    //setImmediate(async () => {
       const logChild = log.child(msg.id);
       try {
         const ctx = new CommandContext(client, msg, config, logChild);
@@ -33,7 +33,7 @@ const readyListener: Listener = client => {
       } catch (error) {
         logChild.error(error);
       }
-    });
+    //});
   });
 };
 

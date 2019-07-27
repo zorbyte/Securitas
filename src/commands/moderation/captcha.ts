@@ -7,7 +7,7 @@ const captchaCmd: Command = {
   name: "captcha",
   permission: 1,
   aliases: ["c"],
-  run({ msg }) {
+  async run({ msg }) {
     const captcha = captchaGen.create();
     captcha.generate();
 
