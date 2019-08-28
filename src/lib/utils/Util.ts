@@ -60,7 +60,7 @@ class Util {
     await Promise.all([...filePaths.keys()]
       .map(async filePath => {
         const { default: component }: { default: T } = await import(filePath);
-
+        if (!component) return;
         const componentName = await loadFunc(component, filePath, scanPath, log);
         if (componentName)
           log(`Loaded ${displayTypeName} ${componentName}.`);
