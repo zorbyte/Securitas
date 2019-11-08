@@ -1,5 +1,5 @@
 import { inspect } from "util";
-import { join, extname } from "path";
+import { join, relative, extname } from "path";
 import { scan } from "fs-nextra";
 import chalk from "chalk";
 import {
@@ -60,7 +60,10 @@ class Util {
     await Promise.all([...filePaths.keys()]
       .map(async filePath => {
         const { default: component }: { default: T } = await import(filePath);
-
+        if (!component) {
+          log(`Malformed ${displayTypeName} at ${relative(scanPath, filePath)}.`);
+          return;
+        }
         const componentName = await loadFunc(component, filePath, scanPath, log);
         if (componentName)
           log(`Loaded ${displayTypeName} ${componentName}.`);

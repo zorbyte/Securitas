@@ -20,7 +20,7 @@
     "pretty": true,
     "removeComments": true,
     "resolveJsonModule": true,
-    "sourceMap": true,
+    "sourceMap": false,
     "strict": true,
     "strictBindCallApply": true,
     "strictNullChecks": true,
@@ -39,7 +39,7 @@
   "include": [
     "configs/**/*",
     //"src/**/*",
-    "src/**/*",
+    "src/**/*"
     //"src/@types/**/*"
   ]
 }

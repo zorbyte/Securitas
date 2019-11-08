@@ -19,7 +19,9 @@
   },
   "homepage": "https://github.com/zorbyte/DeX#readme",
   "xo": {
-    "extends": ["xo-typescript"],
+    "extends": [
+      "xo-typescript"
+    ],
     "esnext": true,
     "semicolon": true,
     "space": true,
@@ -104,7 +106,9 @@
           "varsIgnorePattern": "^_"
         }
       ],
-      "no-console": ["error"],
+      "no-console": [
+        "error"
+      ],
       "no-dupe-class-members": "off",
       "@typescript-eslint/unified-signatures": "off"
     },
@@ -123,7 +127,7 @@
     "clean-stack": "^2.1.0",
     "debug": "^4.1.1",
     "didyoumean2": "^3.1.1",
-    "discord.js": "discordjs/discord.js",
+    "discord.js": "discordjs/discord.js#master",
     "dotenv": "^8.0.0",
     "fs-nextra": "^0.4.5",
     "keyv": "^3.1.0",
